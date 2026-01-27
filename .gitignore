@@ -30,8 +30,17 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (do not commit secrets; allow a committed example)
 .env*
+!.env.example
+
+# sensitive data (no subir al repo)
+lib/embeddings.json
+lib/knowledge-base.json
+
+# VS Code
+.vscode/
+!.vscode/mcp.json
 
 # vercel
 .vercel
