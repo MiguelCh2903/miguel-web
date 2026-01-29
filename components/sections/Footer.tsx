@@ -1,5 +1,6 @@
-import { Github, Linkedin, Mail, Twitter, Heart } from "lucide-react";
+import { Github, Mail, Heart, MapPin } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { contactInfo } from "@/lib/contact-info";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -8,25 +9,13 @@ export function Footer() {
     {
       name: "GitHub",
       icon: Github,
-      href: "https://github.com/tu-usuario",
+      href: contactInfo.social.github,
       label: "Visita mi GitHub",
-    },
-    {
-      name: "LinkedIn",
-      icon: Linkedin,
-      href: "https://linkedin.com/in/tu-perfil",
-      label: "Conéctate en LinkedIn",
-    },
-    {
-      name: "Twitter",
-      icon: Twitter,
-      href: "https://twitter.com/tu-usuario",
-      label: "Sígueme en Twitter",
     },
     {
       name: "Email",
       icon: Mail,
-      href: "mailto:tu-email@ejemplo.com",
+      href: `mailto:${contactInfo.email}`,
       label: "Envíame un email",
     },
   ];
@@ -40,14 +29,7 @@ export function Footer() {
         { name: "Habilidades", href: "#skills" },
         { name: "Experiencia", href: "#experience" },
         { name: "Proyectos", href: "#projects" },
-      ],
-    },
-    {
-      title: "Recursos",
-      links: [
-        { name: "Blog", href: "/blog" },
-        { name: "CV / Resume", href: "/cv" },
-        { name: "Portafolio", href: "#projects" },
+        { name: "Contacto", href: "#contact" },
       ],
     },
   ];
@@ -56,14 +38,19 @@ export function Footer() {
     <footer className="bg-background border-t border-border">
       <div className="mx-auto max-w-7xl px-6 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold mb-3">Miguel</h3>
+          <div>
+            <h3 className="text-2xl font-bold mb-3">{contactInfo.name}</h3>
+            <p className="text-muted-foreground mb-2">{contactInfo.tagline}</p>
             <p className="text-muted-foreground mb-4 max-w-md">
-              Desarrollador Full Stack apasionado por crear soluciones
-              innovadoras y experiencias digitales excepcionales.
+              Especializado en {contactInfo.expertise.join(", ")}. Transformando
+              ideas en soluciones tecnológicas de vanguardia.
             </p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+              <MapPin className="h-4 w-4" />
+              {contactInfo.location}
+            </div>
             {/* Social Links */}
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -105,7 +92,9 @@ export function Footer() {
 
         {/* Bottom Footer */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {currentYear} Miguel. Todos los derechos reservados.</p>
+          <p>
+            © {currentYear} Miguel Chumacero. Todos los derechos reservados.
+          </p>
           <p className="flex items-center gap-1">
             Hecho con <Heart className="h-4 w-4 text-red-500 fill-red-500" />{" "}
             usando Next.js & shadcn/ui

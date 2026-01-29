@@ -4,7 +4,6 @@ import {
   Download,
   ExternalLink,
   Github,
-  Linkedin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -43,24 +42,6 @@ export function ContactSection() {
                   <div className="font-medium">Email</div>
                   <div className="text-sm text-muted-foreground">
                     {contactInfo.email}
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
-              </a>
-
-              <a
-                href={contactInfo.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 rounded-lg border hover:shadow-md transition-all duration-200 hover:border-primary/50 group"
-              >
-                <div className="p-2 rounded-full bg-blue-50 group-hover:bg-blue-100 transition-colors">
-                  <Linkedin className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <div className="font-medium">LinkedIn</div>
-                  <div className="text-sm text-muted-foreground">
-                    Conectemos profesionalmente
                   </div>
                 </div>
                 <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
@@ -135,16 +116,6 @@ export function ContactSection() {
               <a href={`mailto:${contactInfo.email}`}>
                 <Mail className="w-4 h-4 mr-2" />
                 Enviar Email
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <a
-                href={contactInfo.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin className="w-4 h-4 mr-2" />
-                LinkedIn
               </a>
             </Button>
           </div>

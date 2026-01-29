@@ -49,7 +49,7 @@ const portfolioAgent = new ToolLoopAgent({
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    
+
     console.log("📨 Mensajes recibidos:", JSON.stringify(messages, null, 2));
 
     // Usar createAgentUIStreamResponse para streaming con el agente
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         });
       },
     });
-    
+
   } catch (error) {
     console.error("❌ Error en POST /api/chat:", error);
     return new Response(

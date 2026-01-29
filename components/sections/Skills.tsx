@@ -10,7 +10,6 @@ const skillCategories = [
       { name: "TensorFlow", level: "expert" },
       { name: "PyTorch", level: "expert" },
       { name: "OpenCV", level: "expert" },
-      { name: "scikit-learn", level: "expert" },
       { name: "LangChain", level: "expert" },
       { name: "LangGraph", level: "expert" },
       { name: "OpenAI API", level: "expert" },
@@ -23,11 +22,12 @@ const skillCategories = [
     skills: [
       { name: "C/C++", level: "expert" },
       { name: "FastAPI", level: "expert" },
+      { name: "Git", level: "expert" },
       { name: "TypeScript", level: "intermediate" },
       { name: "React", level: "intermediate" },
       { name: "Next.js", level: "intermediate" },
       { name: "PostgreSQL", level: "intermediate" },
-      { name: "Git", level: "expert" },
+      { name: "Supabase", level: "intermediate" },
     ],
   },
   {
@@ -37,10 +37,10 @@ const skillCategories = [
     skills: [
       { name: "ROS2", level: "expert" },
       { name: "Linux", level: "expert" },
-      { name: "Docker", level: "intermediate" },
       { name: "LiDAR", level: "expert" },
       { name: "Sensores", level: "expert" },
-      { name: "Control Adaptativo", level: "expert" },
+      { name: "Aprendizaje por Refuerzo", level: "expert" },
+      { name: "Docker", level: "intermediate" },
     ],
   },
   {

@@ -7,8 +7,7 @@ export const contactInfo = {
   location: "Lima, Perú",
 
   social: {
-    github: "https://github.com/miguelchumacero",
-    linkedin: "https://www.linkedin.com/in/miguelchumacero",
+    github: "https://github.com/MiguelCh2903",
   },
 
   // Bio corta para el Hero
