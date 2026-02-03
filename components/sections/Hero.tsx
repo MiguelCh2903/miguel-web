@@ -1,8 +1,8 @@
 "use client";
 
 import { Mail, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { DownloadCVButton } from "@/components/download-cv-button";
+import { Button } from "@/components/ui/button";
 import { contactInfo } from "@/lib/contact-info";
 
 export function Hero() {
@@ -13,8 +13,14 @@ export function Hero() {
 
       {/* Decorative Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-1/4 top-0 h-125 w-125 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -right-1/4 top-1/2 h-125 w-125 rounded-full bg-primary/5 blur-3xl" />
+        <div
+          className="absolute left-0 top-0 h-125 w-125 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"
+          style={{ animationDuration: "8s" }}
+        />
+        <div
+          className="absolute right-0 top-1/2 h-125 w-125 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"
+          style={{ animationDuration: "8s", animationDelay: "4s" }}
+        />
       </div>
 
       <div className="relative mx-auto max-w-5xl">
@@ -31,7 +37,7 @@ export function Hero() {
           </h1>
 
           {/* Description */}
-          <p className="mb-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          <p className="mb-8 max-w-2xl text-lg leading-[1.7] text-muted-foreground sm:text-xl sm:leading-[1.7]">
             Experiencia en{" "}
             {contactInfo.expertise.map((skill, index) => (
               <span key={skill}>
@@ -49,7 +55,7 @@ export function Hero() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Button
               size="lg"
-              className="gap-2"
+              className="gap-2 shadow-sm hover:shadow-md transition-shadow"
               onClick={() => {
                 window.location.href = `mailto:${contactInfo.email}`;
               }}
@@ -61,7 +67,7 @@ export function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="gap-2"
+              className="gap-2 hover:shadow-sm transition-shadow"
               onClick={() =>
                 document
                   .getElementById("projects")
@@ -78,7 +84,7 @@ export function Hero() {
               href={contactInfo.social.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm transition-colors hover:bg-muted hover:text-primary"
+              className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm transition-all duration-200 hover:bg-muted hover:text-primary hover:shadow-sm active:scale-95"
             >
               <svg
                 className="h-5 w-5"
@@ -96,7 +102,7 @@ export function Hero() {
           {/* Skills Tags */}
           <div className="mt-16 flex flex-wrap justify-center gap-3">
             {[
-              "Machine Learning",
+              "AI",
               "Deep Learning",
               "Computer Vision",
               "LLMs & Agentes",

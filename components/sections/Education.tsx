@@ -1,4 +1,4 @@
-import { GraduationCap, Calendar, MapPin } from "lucide-react";
+import { Calendar, GraduationCap, MapPin } from "lucide-react";
 
 interface EducationItem {
   degree: string;
@@ -35,7 +35,7 @@ const education: EducationItem[] = [
 
 export function EducationSection() {
   return (
-    <section className="py-20 px-6">
+    <section className="py-12 px-6">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <div className="mb-12 flex items-center gap-3">

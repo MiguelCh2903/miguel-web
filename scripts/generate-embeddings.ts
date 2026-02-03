@@ -70,10 +70,23 @@ function createDocumentChunks(): Array<{ content: string; category: string }> {
     },
   );
 
-  // Chunk de habilidades técnicas
+  // Chunk de habilidades técnicas (ahora con la nueva estructura)
+  const skills = knowledgeBase.technical_skills;
+  const skillsText = Object.entries(skills)
+    .map(([key, value]: [string, any]) => {
+      return `${value.description}: ${value.skills.join(", ")}`;
+    })
+    .join(". ");
+  
   chunks.push({
-    content: `Habilidades Técnicas: Programación (${knowledgeBase.technical_skills.programming.join(", ")}), Frameworks AI/ML (${knowledgeBase.technical_skills.ai_ml_frameworks.join(", ")}), Herramientas de Robótica (${knowledgeBase.technical_skills.robotics_tools.join(", ")}), Desarrollo Web (${knowledgeBase.technical_skills.web_development.join(", ")}), Diseño de Hardware (${knowledgeBase.technical_skills.hardware_design.join(", ")}), Herramientas (${knowledgeBase.technical_skills.tools.join(", ")}).`,
+    content: `Habilidades Técnicas de ${knowledgeBase.personal.name}: ${skillsText}.`,
     category: "technical_skills",
+  });
+
+  // Chunk de información de contacto
+  chunks.push({
+    content: `Información de contacto de ${knowledgeBase.personal.name}: Email: ${knowledgeBase.contact.email}, GitHub: ${knowledgeBase.contact.github}, Ubicación: ${knowledgeBase.contact.location}. Para contactar a Miguel, puedes escribirle a su correo electrónico o visitar su perfil de GitHub.`,
+    category: "contact",
   });
 
   return chunks;

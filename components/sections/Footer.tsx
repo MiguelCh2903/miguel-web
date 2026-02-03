@@ -1,4 +1,4 @@
-import { Github, Mail, Heart, MapPin } from "lucide-react";
+import { Github, Heart, Mail, MapPin } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { contactInfo } from "@/lib/contact-info";
 
@@ -96,8 +96,7 @@ export function Footer() {
             © {currentYear} Miguel Chumacero. Todos los derechos reservados.
           </p>
           <p className="flex items-center gap-1">
-            Hecho con <Heart className="h-4 w-4 text-red-500 fill-red-500" />{" "}
-            usando Next.js & shadcn/ui
+            Creando el futuro, línea a línea.
           </p>
         </div>
       </div>

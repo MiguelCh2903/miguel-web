@@ -1,12 +1,20 @@
 "use client";
 
-import { Bot, Send, User, ExternalLink, Download, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import {
+  Bot,
+  Download,
+  ExternalLink,
+  MapPin,
+  Send,
+  User,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -15,7 +23,6 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { X } from "lucide-react";
 import { useChatActions } from "@/hooks/use-chat-actions";
 
 // Funciones auxiliares para las herramientas
@@ -67,10 +74,10 @@ export function AIChatSidebar() {
     const latestMessage = messages[messages.length - 1];
     if (latestMessage?.role === "assistant") {
       latestMessage.parts.forEach((part) => {
-        if (part.type === "tool-result" && part.result) {
-          const result = part.result as any;
+        if (part.type === "tool-result" && "result" in part && part.result) {
+          const result = part.result as Record<string, unknown>;
           if (result.action) {
-            executeAction(result);
+            executeAction(result as { action: string; [key: string]: unknown });
           }
         }
       });
@@ -124,22 +131,24 @@ export function AIChatSidebar() {
                       <Bot className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 rounded-lg bg-muted px-3 py-2 text-sm">
-                    <p className="mb-2">
+                  <div className="flex-1 rounded-lg bg-muted px-3 py-2 text-sm shadow-sm">
+                    <p className="mb-2 leading-relaxed">
                       ¡Hola! 👋 Soy el asistente de IA de Miguel. Puedo ayudarte
                       a:
                     </p>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
+                    <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
                       <li>
-                        🔍 Buscar información sobre sus proyectos y experiencia
+                        Buscar información sobre sus proyectos y experiencia
                       </li>
                       <li>
-                        🧭 Navegar por las diferentes secciones del portfolio
+                        Navegar por las diferentes secciones del portfolio
                       </li>
-                      <li>📧 Proporcionar información de contacto</li>
-                      <li>📄 Ayudarte a descargar su CV</li>
+                      <li>Proporcionar información de contacto</li>
+                      <li>Ayudarte a descargar su CV</li>
                     </ul>
-                    <p className="mt-2 text-xs">¿En qué puedo ayudarte?</p>
+                    <p className="mt-2 text-xs leading-relaxed">
+                      ¿En qué puedo ayudarte?
+                    </p>
                   </div>
                 </div>
 
@@ -176,7 +185,9 @@ export function AIChatSidebar() {
                     size="sm"
                     className="justify-start text-xs"
                     onClick={() =>
-                      sendMessage({ text: "Llévame a la sección de contacto" })
+                      sendMessage({
+                        text: "Dame la información de contacto de Miguel",
+                      })
                     }
                   >
                     <MapPin className="w-3 h-3 mr-2" />
@@ -187,126 +198,132 @@ export function AIChatSidebar() {
                     size="sm"
                     className="justify-start text-xs"
                     onClick={() =>
-                      sendMessage({ text: "Descarga el CV de Miguel" })
+                      sendMessage({
+                        text: "Cuéntame sobre la experiencia laboral de Miguel",
+                      })
                     }
                   >
-                    <Download className="w-3 h-3 mr-2" />
-                    Descargar CV
+                    <ExternalLink className="w-3 h-3 mr-2" />
+                    Experiencia
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                  O haz cualquier pregunta sobre Miguel
+                </p>
               </div>
             )}
 
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 ${
-                  message.role === "user" ? "flex-row-reverse" : "flex-row"
-                }`}
-              >
-                <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarFallback
-                    className={
+            {messages.map((message) => {
+              // No renderizar mensajes del asistente que están completamente vacíos
+              if (message.role === "assistant" && message.parts.length === 0) {
+                return null;
+              }
+
+              return (
+                <div
+                  key={message.id}
+                  className={`flex gap-3 ${
+                    message.role === "user" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <Avatar className="h-8 w-8 shrink-0">
+                    <AvatarFallback
+                      className={
+                        message.role === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted"
+                      }
+                    >
+                      {message.role === "user" ? (
+                        <User className="h-4 w-4" />
+                      ) : (
+                        <Bot className="h-4 w-4" />
+                      )}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div
+                    className={`flex-1 rounded-lg px-3 py-2 text-sm shadow-sm transition-shadow duration-300 ${
                       message.role === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted"
-                    }
+                    }`}
                   >
-                    {message.role === "user" ? (
-                      <User className="h-4 w-4" />
+                    {/* Si es mensaje del asistente sin contenido de texto, mostrar loading dots */}
+                    {message.role === "assistant" &&
+                    message.parts.length > 0 &&
+                    !message.parts.some((p) => p.type === "text" && p.text) ? (
+                      <div className="flex gap-1 py-1">
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground" />
+                      </div>
                     ) : (
-                      <Bot className="h-4 w-4" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-
-                <div
-                  className={`flex-1 rounded-lg px-3 py-2 text-sm ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
-                  }`}
-                >
-                  {message.parts.map((part, index) => {
-                    if (part.type === "text") {
-                      return (
-                        <p
-                          key={index}
-                          className="whitespace-pre-wrap wrap-break-word"
-                        >
-                          {part.text}
-                        </p>
-                      );
-                    }
-
-                    // Renderizar herramientas de manera más visual
-                    if (part.type === "tool-call") {
-                      return (
-                        <div
-                          key={index}
-                          className="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800"
-                        >
-                          <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-300 mb-1">
-                            {getToolIcon(part.toolName)}
-                            <span className="font-medium">
-                              {getToolDisplayName(part.toolName)}
-                            </span>
-                          </div>
-                          {part.toolName === "navigateToSection" && (
-                            <p className="text-xs text-blue-600 dark:text-blue-400">
-                              Navegando a: {part.args.section}
+                      message.parts.map((part, index) => {
+                        if (part.type === "text") {
+                          return (
+                            <p
+                              key={index}
+                              className="whitespace-pre-wrap wrap-break-word leading-relaxed"
+                            >
+                              {part.text}
                             </p>
-                          )}
-                        </div>
-                      );
-                    }
+                          );
+                        }
 
-                    if (part.type === "tool-result") {
-                      const result = part.result as any;
-                      return (
-                        <div key={index} className="mb-2">
-                          {result.action === "navigate" && (
-                            <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
-                              <div className="flex items-center gap-2 text-xs text-green-700 dark:text-green-300">
-                                <MapPin className="w-3 h-3" />
-                                Navegado a {result.title}
+                        // Renderizar herramientas de manera más visual
+                        if (part.type === "tool-call" && "toolName" in part) {
+                          const toolName = part.toolName as string;
+                          return (
+                            <div
+                              key={index}
+                              className="mb-2 p-2 bg-blue-50/70 dark:bg-blue-900/15 rounded-md border border-blue-200/60 dark:border-blue-800/40 shadow-sm"
+                            >
+                              <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-300 mb-1 font-medium">
+                                {getToolIcon(toolName)}
+                                <span>{getToolDisplayName(toolName)}</span>
                               </div>
+                              {toolName === "searchKnowledge" && (
+                                <p className="text-xs text-blue-600/80 dark:text-blue-400/80 leading-relaxed">
+                                  Buscando información...
+                                </p>
+                              )}
                             </div>
-                          )}
-                          {result.action === "download" && (
-                            <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded border border-purple-200 dark:border-purple-800">
-                              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                                <Download className="w-3 h-3" />
-                                CV descargado
-                              </div>
+                          );
+                        }
+
+                        if (part.type === "tool-result" && "result" in part) {
+                          const result = part.result as Record<string, unknown>;
+                          if (!result) return null;
+                          return (
+                            <div key={index} className="mb-2">
+                              {result.action === "navigate" && (
+                                <div className="p-2 bg-green-50/70 dark:bg-green-900/15 rounded-md border border-green-200/60 dark:border-green-800/40 shadow-sm">
+                                  <div className="flex items-center gap-2 text-xs text-green-700 dark:text-green-300 font-medium">
+                                    <MapPin className="w-3 h-3" />
+                                    Navegado a {String(result.title || "")}
+                                  </div>
+                                </div>
+                              )}
+                              {result.action === "download" && (
+                                <div className="p-2 bg-purple-50/70 dark:bg-purple-900/15 rounded-md border border-purple-200/60 dark:border-purple-800/40 shadow-sm">
+                                  <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300 font-medium">
+                                    <Download className="w-3 h-3" />
+                                    CV descargado
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      );
-                    }
+                          );
+                        }
 
-                    return null;
-                  })}
-                </div>
-              </div>
-            ))}
-
-            {(status === "streaming" || status === "submitted") && (
-              <div className="flex gap-3">
-                <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarFallback className="bg-muted">
-                    <Bot className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 rounded-lg bg-muted px-3 py-2">
-                  <div className="flex gap-1">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground" />
+                        return null;
+                      })
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
+              );
+            })}
           </div>
         </ScrollArea>
       </SidebarContent>
@@ -319,8 +336,7 @@ export function AIChatSidebar() {
             onChange={(e) => {
               setInput(e.target.value);
               e.target.style.height = "auto";
-              e.target.style.height =
-                Math.min(e.target.scrollHeight, 120) + "px";
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {

@@ -3,7 +3,7 @@
 
 export const contactInfo = {
   name: "Miguel Chumacero",
-  email: "miguelangel.chumacerom@gmail.com",
+  email: "miguel.chumacero.b@gmail.com",
   location: "Lima, Perú",
 
   social: {
@@ -16,7 +16,7 @@ export const contactInfo = {
     "Desarrollador especializado en sistemas inteligentes, visión artificial y automatización avanzada. Transformando ideas en soluciones tecnológicas de vanguardia.",
 
   // Áreas de especialización
-  expertise: ["Machine Learning", "Computer Vision", "Sistemas Autónomos"],
+  expertise: ["Desarrollo de Software", "Inteligencia Artificial", "Sistemas Autónomos"],
 
   // CV
   cv: {

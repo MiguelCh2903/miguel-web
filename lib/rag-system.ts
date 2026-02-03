@@ -1,7 +1,7 @@
-import knowledgeBase from "./knowledge-base.json";
-import precomputedEmbeddings from "./embeddings.json";
-import { embed, cosineSimilarity } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { cosineSimilarity, embed } from "ai";
+import precomputedEmbeddings from "./embeddings.json";
+import knowledgeBase from "./knowledge-base.json";
 
 // Interfaz para documentos con embeddings
 interface EmbeddedDocument {
@@ -23,17 +23,24 @@ interface EmbeddedDocument {
  * - ✅ No requiere saldo en producción
  */
 
-// Cargar embeddings pre-computados (sin costo)
-const vectorDB: EmbeddedDocument[] =
-  precomputedEmbeddings as EmbeddedDocument[];
+// Cargar embeddings pre-computados (sin costo) - Lazy loading
+let vectorDB: EmbeddedDocument[] | null = null;
 
-console.log(
-  `✅ Vector DB cargado: ${vectorDB.length} documentos con embeddings pre-computados`,
-);
+function getVectorDB(): EmbeddedDocument[] {
+  if (!vectorDB) {
+    vectorDB = precomputedEmbeddings as EmbeddedDocument[];
+    console.log(
+      `✅ Vector DB cargado: ${vectorDB.length} documentos con embeddings pre-computados`,
+    );
+  }
+  return vectorDB;
+}
 
 // Búsqueda semántica con embeddings pre-computados
 export async function findRelevantContext(query: string): Promise<string> {
   try {
+    const db = getVectorDB();
+
     // 1. Generar embedding solo de la query del usuario (única llamada API)
     const { embedding: queryEmbedding } = await embed({
       model: openai.embedding("text-embedding-3-small"),
@@ -41,7 +48,7 @@ export async function findRelevantContext(query: string): Promise<string> {
     });
 
     // 2. Calcular similitud coseno con documentos pre-embedidos (sin costo)
-    const results = vectorDB
+    const results = db
       .map((doc) => ({
         content: doc.content,
         category: doc.category,
@@ -50,16 +57,18 @@ export async function findRelevantContext(query: string): Promise<string> {
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, 4); // Top 4 documentos más relevantes
 
-    // 3. Log para debugging
-    console.log("🔍 Query:", query);
-    console.log(
-      "📊 Top resultados:",
-      results.map((r) => ({
-        category: r.category,
-        similarity: r.similarity.toFixed(3),
-        preview: r.content.substring(0, 80) + "...",
-      })),
-    );
+    // 3. Log para debugging (solo en desarrollo)
+    if (process.env.NODE_ENV === "development") {
+      console.log("🔍 Query:", query);
+      console.log(
+        "📊 Top resultados:",
+        results.map((r) => ({
+          category: r.category,
+          similarity: r.similarity.toFixed(3),
+          preview: r.content.substring(0, 80) + "...",
+        })),
+      );
+    }
 
     // 4. Si no hay resultados relevantes (similarity muy baja), retornar info general
     if (results.length === 0 || results[0].similarity < 0.3) {

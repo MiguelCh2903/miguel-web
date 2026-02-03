@@ -1,49 +1,32 @@
 "use client";
 
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { AIChatSidebar } from "@/components/ai-chat-sidebar";
 import { MessageSquare } from "lucide-react";
+import { lazy, Suspense } from "react";
 import { sections } from "@/components/sections/sections-config";
-import { useEffect, useState } from "react";
+import { Navbar } from "@/components/navbar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  useSidebar,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+
+// Lazy load del sidebar para reducir bundle inicial
+const AIChatSidebar = lazy(() =>
+  import("@/components/ai-chat-sidebar").then((mod) => ({
+    default: mod.AIChatSidebar,
+  })),
+);
 
 function HomeContent() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const { open } = useSidebar();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <div className="flex min-h-screen w-full">
       {/* Main Content */}
       <SidebarInset className="flex-1">
-        {/* Header with Sidebar Toggle */}
-        <header
-          className={`sticky top-0 z-10 flex h-16 items-center justify-between bg-background/95 px-4 backdrop-blur transition-shadow duration-200 supports-backdrop-filter:bg-background/60 ${
-            isScrolled ? "border-b shadow-sm" : ""
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold">Miguel Chumacero</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="gap-2 h-9 px-3">
-              <MessageSquare className="h-4 w-4" />
-              <span className="hidden sm:inline">Chat IA</span>
-            </SidebarTrigger>
-          </div>
-        </header>
+        {/* Navbar Component */}
+        <Navbar />
 
         {/* Page Content - Renderiza todas las secciones en orden */}
         <main>
@@ -55,8 +38,14 @@ function HomeContent() {
         </main>
       </SidebarInset>
 
-      {/* AI Chat Sidebar - Renderiza solo si está abierto */}
-      {open && <AIChatSidebar />}
+      {/* AI Chat Sidebar - Renderiza solo si está abierto con lazy loading */}
+      {open && (
+        <Suspense
+          fallback={<div className="w-80 border-l animate-pulse bg-muted/20" />}
+        >
+          <AIChatSidebar />
+        </Suspense>
+      )}
 
       {/* Floating trigger button when sidebar is closed */}
       {!open && (

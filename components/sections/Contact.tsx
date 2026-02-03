@@ -1,21 +1,25 @@
+"use client";
+
 import {
-  Mail,
-  MessageSquare,
   Download,
   ExternalLink,
   Github,
+  Mail,
+  MessageSquare,
 } from "lucide-react";
+import { DownloadCVButton } from "@/components/download-cv-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { DownloadCVButton } from "@/components/download-cv-button";
+import { useSidebar } from "@/components/ui/sidebar";
 import { contactInfo } from "@/lib/contact-info";
 
 export function ContactSection() {
+  const { setOpen } = useSidebar();
   return (
-    <section className="py-20 bg-gradient-to-br from-background to-muted/30">
+    <section className="py-12 bg-linear-to-br from-background to-muted/30">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-4 bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             ¿Listo para Colaborar?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -93,7 +97,12 @@ export function ContactSection() {
                   ¿Preguntas específicas? Mi asistente de IA puede ayudarte con
                   información detallada.
                 </p>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setOpen(true)}
+                >
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Iniciar Chat
                 </Button>

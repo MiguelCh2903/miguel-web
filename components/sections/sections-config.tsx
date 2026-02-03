@@ -5,13 +5,13 @@
  * Puedes comentar o descomentar secciones para mostrarlas u ocultarlas.
  */
 
-import { Hero } from "./Hero";
-import { EducationSection } from "./Education";
-import { SkillsSection } from "./Skills";
-import { ExperienceSection } from "./Experience";
-import { ProjectsSection } from "./Projects";
 import { ContactSection } from "./Contact";
+import { EducationSection } from "./Education";
+import { ExperienceSection } from "./Experience";
 import { Footer } from "./Footer";
+import { Hero } from "./Hero";
+import { ProjectsSection } from "./Projects";
+import { SkillsSection } from "./Skills";
 
 export const sections = [
   { id: "hero", component: Hero, name: "Hero" },

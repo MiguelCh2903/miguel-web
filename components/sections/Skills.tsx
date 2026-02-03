@@ -1,4 +1,4 @@
-import { Sparkles, Code, Brain, Cpu, Wrench } from "lucide-react";
+import { Brain, Code, Cpu, Sparkles, Wrench } from "lucide-react";
 
 const skillCategories = [
   {
@@ -70,7 +70,7 @@ const levelLabels = {
 
 export function SkillsSection() {
   return (
-    <section className="py-20 px-6 bg-muted/30">
+    <section className="py-12 px-6 bg-muted/30">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <div className="mb-12 flex flex-col gap-3">

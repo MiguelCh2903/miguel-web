@@ -30,7 +30,7 @@ const experiences: ExperienceItem[] = [
     description:
       "Universidad Nacional de Ingeniería · Unidad de Investigación de la Facultad de Ingeniería Mecánica",
     highlights: [
-      "🏆 Miembro del equipo ganador del Spatial Payload Competition ISSSP: Desarrollo de robot inchworm con adherencia electrostática y percepción multisensorial",
+      "🏆 Miembro del equipo finalista del Spatial Payload Competition ISSSP: Desarrollo de robot inchworm con adherencia electrostática y percepción multisensorial",
       "Director del proyecto de prototipo de robot guía móvil basado en IA generativa de lenguaje (LLMs) para la gestión autónoma de consultas en espacios de exposición",
       "Desarrollo de agentes conversacionales y asistentes de productividad utilizando LangGraph, arquitecturas RAG y servicios de IA (OpenAI, Deepgram, ElevenLabs)",
       "Dirección de proyecto de robot hexápodo de exploración con movimiento optimizado mediante aprendizaje por refuerzo y visión artificial",
@@ -41,7 +41,7 @@ const experiences: ExperienceItem[] = [
 
 export function ExperienceSection() {
   return (
-    <section className="py-20 px-6">
+    <section className="py-12 px-6">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <div className="mb-12 flex items-center gap-3">
