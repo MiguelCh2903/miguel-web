@@ -1,76 +1,69 @@
-import { Brain, Code, Cpu, Sparkles, Wrench } from "lucide-react";
+import { Brain, Code, Cpu, Sparkles } from "lucide-react";
 
 const skillCategories = [
   {
-    title: "Machine Learning & Computer Vision",
+    title: "Inteligencia Artificial Generativa & LLMs",
     icon: Brain,
-    description: "Desarrollo de sistemas inteligentes",
+    description: "Desarrollo de agentes inteligentes y sistemas conversacionales",
     skills: [
-      { name: "Python", level: "expert" },
-      { name: "TensorFlow", level: "expert" },
-      { name: "PyTorch", level: "expert" },
-      { name: "OpenCV", level: "expert" },
-      { name: "LangChain", level: "expert" },
-      { name: "LangGraph", level: "expert" },
-      { name: "OpenAI API", level: "expert" },
+      "AI Agents",
+      "Agentic Workflows",
+      "LangChain",
+      "Prompt Engineering",
+      "RAG",
+      "MCPs",
+      "Chroma",
+      "OpenAI API",
+      "Anthropic API",
+      "Google AI",
+      "N8N",
     ],
   },
   {
-    title: "Desarrollo",
+    title: "Desarrollo de Software & MLOps",
     icon: Code,
-    description: "Frameworks y herramientas modernas",
+    description: "Backend, APIs y herramientas modernas",
     skills: [
-      { name: "C/C++", level: "expert" },
-      { name: "FastAPI", level: "expert" },
-      { name: "Git", level: "expert" },
-      { name: "TypeScript", level: "intermediate" },
-      { name: "React", level: "intermediate" },
-      { name: "Next.js", level: "intermediate" },
-      { name: "PostgreSQL", level: "intermediate" },
-      { name: "Supabase", level: "intermediate" },
+      "Python",
+      "FastAPI",
+      "Git",
+      "Docker",
+      "Linux",
+      "PostgreSQL",
+      "MongoDB",
+      "TypeScript",
+      "React",
     ],
   },
   {
-    title: "Robótica & Sistemas Autónomos",
+    title: "Machine Learning & Computer Vision",
+    icon: Sparkles,
+    description: "Modelos de aprendizaje profundo y visión artificial",
+    skills: [
+      "PyTorch",
+      "TensorFlow",
+      "YOLO",
+      "OpenCV",
+      "NLP",
+    ],
+  },
+  {
+    title: "Robótica & Sistemas Embebidos",
     icon: Cpu,
-    description: "Infraestructura y control inteligente",
+    description: "Control autónomo y sistemas inteligentes",
     skills: [
-      { name: "ROS2", level: "expert" },
-      { name: "Linux", level: "expert" },
-      { name: "LiDAR", level: "expert" },
-      { name: "Sensores", level: "expert" },
-      { name: "Aprendizaje por Refuerzo", level: "expert" },
-      { name: "Docker", level: "intermediate" },
-    ],
-  },
-  {
-    title: "Hardware & Diseño",
-    icon: Wrench,
-    description: "Mecatrónica y prototipado",
-    skills: [
-      { name: "SolidWorks", level: "expert" },
-      { name: "Fusion 360", level: "expert" },
-      { name: "KiCad", level: "expert" },
-      { name: "Prototipado", level: "expert" },
-      { name: "PCB Design", level: "expert" },
-      { name: "Arduino/ESP32", level: "expert" },
+      "ROS2",
+      "C/C++",
+      "Reinforcement Learning",
+      "Arduino/ESP32",
+      "LiDAR",
     ],
   },
 ];
 
-const levelColors = {
-  expert: "bg-primary text-primary-foreground",
-  intermediate: "bg-muted text-foreground",
-};
-
-const levelLabels = {
-  expert: "Experto",
-  intermediate: "Intermedio",
-};
-
 export function SkillsSection() {
   return (
-    <section className="py-12 px-6 bg-muted/30">
+    <section className="py-12 px-6">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <div className="mb-12 flex flex-col gap-3">
@@ -79,8 +72,8 @@ export function SkillsSection() {
             <h2 className="text-3xl font-bold">Habilidades</h2>
           </div>
           <p className="text-lg text-muted-foreground">
-            Especialización en desarrollo de sistemas inteligentes, visión
-            artificial y automatización con aprendizaje automático
+            Especialización en desarrollo de agentes de IA, sistemas conversacionales
+            y automatización con modelos de lenguaje de última generación
           </p>
         </div>
 
@@ -111,19 +104,12 @@ export function SkillsSection() {
                 {/* Skills List */}
                 <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill, skillIndex) => (
-                    <div key={skillIndex} className="group/skill relative">
-                      <span
-                        className={`inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium transition-all ${
-                          levelColors[skill.level as keyof typeof levelColors]
-                        } hover:scale-105`}
-                      >
-                        {skill.name}
-                      </span>
-                      {/* Tooltip */}
-                      <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-popover px-2 py-1 text-xs text-popover-foreground opacity-0 shadow-md transition-opacity group-hover/skill:opacity-100">
-                        {levelLabels[skill.level as keyof typeof levelLabels]}
-                      </span>
-                    </div>
+                    <span
+                      key={skillIndex}
+                      className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-foreground transition-all hover:bg-primary/20 hover:scale-105 cursor-default"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>

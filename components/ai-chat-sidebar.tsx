@@ -4,15 +4,18 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import {
   Bot,
+  Briefcase,
+  CheckCircle2,
   Download,
-  ExternalLink,
-  MapPin,
+  Loader2,
+  Mail,
+  Rocket,
   Send,
-  User,
+  Sparkles,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import type { LucideIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -21,347 +24,317 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useChatActions } from "@/hooks/use-chat-actions";
+import { MESSAGE_QUOTA, WARNING_THRESHOLD } from "@/lib/chat-types";
+import type { ChatPart } from "@/lib/chat-types";
+import { ChatWelcome } from "@/components/chat/chat-welcome";
+import { ChatMessage } from "@/components/chat/chat-message";
 
-// Funciones auxiliares para las herramientas
-function getToolIcon(toolName: string) {
-  switch (toolName) {
-    case "navigateToSection":
-      return <MapPin className="w-3 h-3" />;
-    case "downloadCV":
-      return <Download className="w-3 h-3" />;
-    case "getContactInformation":
-      return <ExternalLink className="w-3 h-3" />;
-    case "searchInformation":
-      return <Bot className="w-3 h-3" />;
-    case "getProjectDetails":
-      return <ExternalLink className="w-3 h-3" />;
-    default:
-      return <Bot className="w-3 h-3" />;
-  }
+// ============================================
+// PRESET BUTTONS (navigation only — no chat quota)
+// ============================================
+
+interface PresetButton {
+  label: string;
+  icon: LucideIcon;
+  message: string;
+  section: string;
+  action: "navigate" | "download";
 }
 
-function getToolDisplayName(toolName: string) {
-  switch (toolName) {
-    case "navigateToSection":
-      return "Navegación";
-    case "downloadCV":
-      return "Descarga CV";
-    case "getContactInformation":
-      return "Información de Contacto";
-    case "searchInformation":
-      return "Búsqueda";
-    case "getProjectDetails":
-      return "Detalles de Proyecto";
-    default:
-      return toolName;
-  }
-}
+const PRESET_BUTTONS: PresetButton[] = [
+  { label: "Skills", icon: Sparkles, message: "", section: "skills", action: "navigate" },
+  { label: "Exp.", icon: Briefcase, message: "", section: "experience", action: "navigate" },
+  { label: "Proyectos", icon: Rocket, message: "", section: "projects", action: "navigate" },
+  { label: "Contacto", icon: Mail, message: "", section: "contact", action: "navigate" },
+  { label: "CV", icon: Download, message: "", section: "", action: "download" },
+];
+
+// ============================================
+// COMPONENT
+// ============================================
 
 export function AIChatSidebar() {
   const [input, setInput] = useState("");
-  const { executeAction } = useChatActions();
+  const [freeTextCount, setFreeTextCount] = useState(0);
+  const [isSending, setIsSending] = useState(false);
+  const [localNotice, setLocalNotice] = useState<{ id: string; text: string } | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { isMobile, setOpen, setOpenMobile } = useSidebar();
+  const { executeAction, scrollToSection, downloadCV } = useChatActions();
+
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-    }),
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
-  // Manejar acciones de herramientas
+  const isStreaming = status === "submitted" || status === "streaming";
+  const quotaReached = freeTextCount >= MESSAGE_QUOTA;
+  const showWarning = freeTextCount >= WARNING_THRESHOLD && !quotaReached;
+
+  // Timestamps map — track when each message appeared
+  const [messageTimes] = useState(() => new Map<string, Date>());
+  useMemo(() => {
+    for (const m of messages) {
+      if (!messageTimes.has(m.id)) {
+        messageTimes.set(m.id, new Date());
+      }
+    }
+  }, [messages, messageTimes]);
+
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isStreaming]);
+
+  // Handle tool actions from assistant
+  // AI SDK v6: tool parts are "dynamic-tool" with state "output-available" and output field
   useEffect(() => {
     const latestMessage = messages[messages.length - 1];
     if (latestMessage?.role === "assistant") {
-      latestMessage.parts.forEach((part) => {
-        if (part.type === "tool-result" && "result" in part && part.result) {
-          const result = part.result as Record<string, unknown>;
+      for (const part of latestMessage.parts) {
+        const p = part as { type: string; state?: string; output?: unknown; result?: unknown };
+        const isV6Tool = p.type === "dynamic-tool" && p.state === "output-available" && p.output;
+        const isLegacyTool = p.type === "tool-result" && p.result;
+        const payload = isV6Tool ? p.output : isLegacyTool ? p.result : null;
+        if (payload) {
+          const result = payload as Record<string, unknown>;
           if (result.action) {
             executeAction(result as { action: string; [key: string]: unknown });
           }
         }
-      });
+      }
     }
   }, [messages, executeAction]);
 
+  // Reset isSending when streaming ends
+  useEffect(() => {
+    if (status === "ready" && isSending) {
+      setIsSending(false);
+    }
+  }, [status, isSending]);
+
+  // Auto-dismiss local notice
+  useEffect(() => {
+    if (!localNotice) return undefined;
+    const t = setTimeout(() => setLocalNotice(null), 900);
+    return () => clearTimeout(t);
+  }, [localNotice]);
+
+  const handleCloseChat = useCallback(() => {
+    isMobile ? setOpenMobile(false) : setOpen(false);
+  }, [isMobile, setOpen, setOpenMobile]);
+
+  const handlePresetClick = useCallback((preset: PresetButton) => {
+    if (preset.action === "navigate") {
+      setLocalNotice({ id: String(Date.now()), text: `Navegando a ${preset.label}...` });
+      scrollToSection(preset.section);
+    } else if (preset.action === "download") {
+      setLocalNotice({ id: String(Date.now()), text: "Preparando descarga del CV..." });
+      downloadCV();
+    }
+  }, [scrollToSection, downloadCV]);
+
+  const handleSend = useCallback((text: string) => {
+    if (!text.trim() || quotaReached || isStreaming) return;
+    setIsSending(true);
+    sendMessage({ text });
+    setFreeTextCount((c) => c + 1);
+    setInput("");
+  }, [quotaReached, isStreaming, sendMessage]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
-      sendMessage({ text: input });
-      setInput("");
-    }
+    handleSend(input);
   };
 
+  const handleFollowUp = useCallback((question: string) => {
+    handleSend(question);
+  }, [handleSend]);
+
   return (
-    <Sidebar
-      side="right"
-      collapsible="none"
-      className="border-l sticky top-0 h-screen"
-    >
-      {/* Header con botón de cerrar */}
+    <Sidebar side="right" collapsible="offcanvas" className="border-l">
+      {/* Header */}
       <SidebarHeader className="h-16 border-b px-4 flex items-center shadow-sm">
         <div className="flex items-center justify-between gap-3 w-full">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Bot className="h-5 w-5" />
+          <div className="flex items-center gap-2.5">
+            <div className="relative">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                <Bot className="h-4.5 w-4.5" />
+              </div>
             </div>
             <div>
-              <h2 className="text-sm font-semibold">Chat con IA</h2>
-              <p className="text-xs text-muted-foreground">
-                Pregúntame sobre Miguel
+              <h2 className="text-sm font-semibold leading-tight">Miguel AI</h2>
+              <p className="text-[11px] text-muted-foreground">
+                Agente RAG · tool calling
               </p>
             </div>
           </div>
-          <SidebarTrigger className="h-8 w-8">
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="h-8 w-8"
+            onClick={handleCloseChat}
+          >
             <X className="h-4 w-4" />
             <span className="sr-only">Cerrar chat</span>
-          </SidebarTrigger>
+          </Button>
         </div>
       </SidebarHeader>
 
-      {/* Chat Messages */}
+      {/* Chat messages */}
       <SidebarContent className="p-0">
         <ScrollArea className="h-full">
-          <div className="flex flex-col gap-4 p-4">
+          <div className="flex flex-col gap-3 p-4">
+            {/* Welcome screen */}
             {messages.length === 0 && (
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-3">
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback className="bg-muted">
-                      <Bot className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 rounded-lg bg-muted px-3 py-2 text-sm shadow-sm">
-                    <p className="mb-2 leading-relaxed">
-                      ¡Hola! 👋 Soy el asistente de IA de Miguel. Puedo ayudarte
-                      a:
-                    </p>
-                    <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
-                      <li>
-                        Buscar información sobre sus proyectos y experiencia
-                      </li>
-                      <li>
-                        Navegar por las diferentes secciones del portfolio
-                      </li>
-                      <li>Proporcionar información de contacto</li>
-                      <li>Ayudarte a descargar su CV</li>
-                    </ul>
-                    <p className="mt-2 text-xs leading-relaxed">
-                      ¿En qué puedo ayudarte?
-                    </p>
+              <ChatWelcome onSendMessage={handleFollowUp} />
+            )}
+
+            {/* Local action notice */}
+            {localNotice && (
+              <div key={localNotice.id} className="mb-1">
+                <div className="p-2 bg-green-50/80 dark:bg-green-900/20 rounded-lg border border-green-200/70 dark:border-green-800/50 shadow-sm">
+                  <div className="flex items-center gap-2 text-xs text-green-700 dark:text-green-300 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{localNotice.text}</span>
                   </div>
                 </div>
-
-                {/* Botones de acciones rápidas */}
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="justify-start text-xs"
-                    onClick={() =>
-                      sendMessage({
-                        text: "Háblame sobre los proyectos de Miguel",
-                      })
-                    }
-                  >
-                    <Bot className="w-3 h-3 mr-2" />
-                    Ver Proyectos
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="justify-start text-xs"
-                    onClick={() =>
-                      sendMessage({
-                        text: "¿Cuáles son las habilidades técnicas de Miguel?",
-                      })
-                    }
-                  >
-                    <ExternalLink className="w-3 h-3 mr-2" />
-                    Habilidades
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="justify-start text-xs"
-                    onClick={() =>
-                      sendMessage({
-                        text: "Dame la información de contacto de Miguel",
-                      })
-                    }
-                  >
-                    <MapPin className="w-3 h-3 mr-2" />
-                    Contacto
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="justify-start text-xs"
-                    onClick={() =>
-                      sendMessage({
-                        text: "Cuéntame sobre la experiencia laboral de Miguel",
-                      })
-                    }
-                  >
-                    <ExternalLink className="w-3 h-3 mr-2" />
-                    Experiencia
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  O haz cualquier pregunta sobre Miguel
-                </p>
               </div>
             )}
 
+            {/* All messages */}
             {messages.map((message) => {
-              // No renderizar mensajes del asistente que están completamente vacíos
-              if (message.role === "assistant" && message.parts.length === 0) {
-                return null;
-              }
+              if (message.role === "assistant" && message.parts.length === 0) return null;
+
+              const isLastAssistant =
+                message.role === "assistant" &&
+                message.id === messages.findLast((m) => m.role === "assistant")?.id;
 
               return (
-                <div
+                <ChatMessage
                   key={message.id}
-                  className={`flex gap-3 ${
-                    message.role === "user" ? "flex-row-reverse" : "flex-row"
-                  }`}
-                >
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback
-                      className={
-                        message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
-                      }
-                    >
-                      {message.role === "user" ? (
-                        <User className="h-4 w-4" />
-                      ) : (
-                        <Bot className="h-4 w-4" />
-                      )}
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <div
-                    className={`flex-1 rounded-lg px-3 py-2 text-sm shadow-sm transition-shadow duration-300 ${
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
-                    }`}
-                  >
-                    {/* Si es mensaje del asistente sin contenido de texto, mostrar loading dots */}
-                    {message.role === "assistant" &&
-                    message.parts.length > 0 &&
-                    !message.parts.some((p) => p.type === "text" && p.text) ? (
-                      <div className="flex gap-1 py-1">
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground" />
-                      </div>
-                    ) : (
-                      message.parts.map((part, index) => {
-                        if (part.type === "text") {
-                          return (
-                            <p
-                              key={index}
-                              className="whitespace-pre-wrap wrap-break-word leading-relaxed"
-                            >
-                              {part.text}
-                            </p>
-                          );
-                        }
-
-                        // Renderizar herramientas de manera más visual
-                        if (part.type === "tool-call" && "toolName" in part) {
-                          const toolName = part.toolName as string;
-                          return (
-                            <div
-                              key={index}
-                              className="mb-2 p-2 bg-blue-50/70 dark:bg-blue-900/15 rounded-md border border-blue-200/60 dark:border-blue-800/40 shadow-sm"
-                            >
-                              <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-300 mb-1 font-medium">
-                                {getToolIcon(toolName)}
-                                <span>{getToolDisplayName(toolName)}</span>
-                              </div>
-                              {toolName === "searchKnowledge" && (
-                                <p className="text-xs text-blue-600/80 dark:text-blue-400/80 leading-relaxed">
-                                  Buscando información...
-                                </p>
-                              )}
-                            </div>
-                          );
-                        }
-
-                        if (part.type === "tool-result" && "result" in part) {
-                          const result = part.result as Record<string, unknown>;
-                          if (!result) return null;
-                          return (
-                            <div key={index} className="mb-2">
-                              {result.action === "navigate" && (
-                                <div className="p-2 bg-green-50/70 dark:bg-green-900/15 rounded-md border border-green-200/60 dark:border-green-800/40 shadow-sm">
-                                  <div className="flex items-center gap-2 text-xs text-green-700 dark:text-green-300 font-medium">
-                                    <MapPin className="w-3 h-3" />
-                                    Navegado a {String(result.title || "")}
-                                  </div>
-                                </div>
-                              )}
-                              {result.action === "download" && (
-                                <div className="p-2 bg-purple-50/70 dark:bg-purple-900/15 rounded-md border border-purple-200/60 dark:border-purple-800/40 shadow-sm">
-                                  <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300 font-medium">
-                                    <Download className="w-3 h-3" />
-                                    CV descargado
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        }
-
-                        return null;
-                      })
-                    )}
-                  </div>
-                </div>
+                  role={message.role as "user" | "assistant"}
+                  parts={message.parts as ChatPart[]}
+                  createdAt={messageTimes.get(message.id)}
+                  isStreaming={isLastAssistant && isStreaming}
+                  onFollowUp={handleFollowUp}
+                  isDisabled={isStreaming || quotaReached}
+                />
               );
             })}
+
+            {/* Thinking indicator — immediate feedback before first stream token */}
+            {isStreaming && messages[messages.length - 1]?.role === "user" && (
+              <div className="flex gap-2.5 chat-message-in flex-row">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted border border-border/60 shrink-0 mt-0.5">
+                  <Bot className="h-3.5 w-3.5" />
+                </div>
+                <div className="rounded-2xl rounded-tl-sm px-3 py-2.5 bg-muted/60 border border-border/40 shadow-sm">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                    <span>Pensando...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Scroll anchor */}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
       </SidebarContent>
 
-      {/* Input Footer */}
-      <SidebarFooter className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              e.target.style.height = "auto";
-              e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-            placeholder="Escribe tu pregunta..."
-            className="flex-1 min-h-10 max-h-30 resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={status !== "ready"}
-            rows={1}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={status !== "ready" || !input.trim()}
-            className="self-end"
-          >
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Enviar</span>
-          </Button>
-        </form>
+      {/* Footer */}
+      <SidebarFooter className="border-t p-3">
+        {/* Quota warning */}
+        {showWarning && (
+          <div className="mb-2 p-2 bg-amber-50/80 dark:bg-amber-900/20 rounded-lg border border-amber-200/70 dark:border-amber-800/50 text-xs text-amber-700 dark:text-amber-300">
+            Te quedan {MESSAGE_QUOTA - freeTextCount} preguntas. Para más info, contacta a Miguel directamente.
+          </div>
+        )}
+
+        {/* Quick nav buttons */}
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {PRESET_BUTTONS.map((preset) => {
+            const Icon = preset.icon;
+            return (
+              <Button
+                key={preset.label}
+                variant="outline"
+                size="sm"
+                className="text-xs h-auto py-1 px-2 hover:bg-primary/5 hover:border-primary/30 transition-all"
+                onClick={() => handlePresetClick(preset)}
+              >
+                <Icon className="w-3 h-3 mr-1 text-primary" />
+                {preset.label}
+              </Button>
+            );
+          })}
+        </div>
+
+        {/* Input or quota reached */}
+        {quotaReached ? (
+          <div className="text-center py-2">
+            <p className="text-sm font-medium mb-1.5">Límite de preguntas alcanzado</p>
+            <p className="text-xs text-muted-foreground mb-3">
+              Contacta a Miguel directamente para más información:
+            </p>
+            <div className="flex gap-2 justify-center">
+              <Button
+                size="sm"
+                className="text-xs"
+                onClick={() => { window.location.href = "mailto:miguel.chumacero.b@gmail.com"; }}
+              >
+                <Mail className="w-3.5 h-3.5 mr-1.5" />
+                Email
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs"
+                onClick={() => { window.open("https://github.com/MiguelCh2903", "_blank"); }}
+              >
+                GitHub
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <textarea
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+              placeholder="Escribe tu pregunta..."
+              className="flex-1 min-h-10 max-h-[120px] resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isStreaming}
+              rows={1}
+            />
+            <Button
+              type="submit"
+              size="icon"
+              disabled={isStreaming || !input.trim()}
+              className="self-end shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Enviar</span>
+            </Button>
+          </form>
+        )}
       </SidebarFooter>
 
-      {/* Rail for collapsing */}
       <SidebarRail />
     </Sidebar>
   );

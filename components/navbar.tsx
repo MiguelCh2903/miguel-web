@@ -112,7 +112,7 @@ export function Navbar() {
           {/* Chat Trigger */}
           <SidebarTrigger className="gap-2 h-9 px-3">
             <MessageSquare className="h-4 w-4" />
-            <span className="hidden sm:inline">Chat IA</span>
+            <span className="hidden md:inline">Chat IA</span>
           </SidebarTrigger>
         </div>
       </div>

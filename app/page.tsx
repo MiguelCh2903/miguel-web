@@ -4,11 +4,11 @@ import { MessageSquare } from "lucide-react";
 import { lazy, Suspense } from "react";
 import { sections } from "@/components/sections/sections-config";
 import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 import {
   SidebarInset,
   SidebarProvider,
   useSidebar,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 // Lazy load del sidebar para reducir bundle inicial
@@ -19,12 +19,20 @@ const AIChatSidebar = lazy(() =>
 );
 
 function HomeContent() {
-  const { open } = useSidebar();
+  const { isMobile, open, openMobile, setOpen, setOpenMobile } = useSidebar();
+  const isChatClosed = isMobile ? !openMobile : !open;
+  const handleOpenChat = () => {
+    if (isMobile) {
+      setOpenMobile(true);
+      return;
+    }
+    setOpen(true);
+  };
 
   return (
     <div className="flex min-h-screen w-full">
       {/* Main Content */}
-      <SidebarInset className="flex-1">
+      <SidebarInset className="flex-1 bg-transparent">
         {/* Navbar Component */}
         <Navbar />
 
@@ -38,21 +46,21 @@ function HomeContent() {
         </main>
       </SidebarInset>
 
-      {/* AI Chat Sidebar - Renderiza solo si está abierto con lazy loading */}
-      {open && (
-        <Suspense
-          fallback={<div className="w-80 border-l animate-pulse bg-muted/20" />}
-        >
-          <AIChatSidebar />
-        </Suspense>
-      )}
+      {/* AI Chat Sidebar - siempre montado, visibilidad manejada por el componente Sidebar */}
+      <Suspense fallback={<div className="w-0" />}>
+        <AIChatSidebar />
+      </Suspense>
 
       {/* Floating trigger button when sidebar is closed */}
-      {!open && (
-        <SidebarTrigger className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg">
+      {isChatClosed && (
+        <Button
+          type="button"
+          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg"
+          onClick={handleOpenChat}
+        >
           <MessageSquare className="h-6 w-6" />
           <span className="sr-only">Abrir chat</span>
-        </SidebarTrigger>
+        </Button>
       )}
     </div>
   );

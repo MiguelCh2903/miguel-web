@@ -1,5 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { cosineSimilarity, embed } from "ai";
+import type { RAGSource } from "./chat-types";
 import precomputedEmbeddings from "./embeddings.json";
 import knowledgeBase from "./knowledge-base.json";
 
@@ -36,18 +37,23 @@ function getVectorDB(): EmbeddedDocument[] {
   return vectorDB;
 }
 
-// Búsqueda semántica con embeddings pre-computados
-export async function findRelevantContext(query: string): Promise<string> {
+// Resultado de búsqueda con metadatos
+export interface RAGResult {
+  context: string;
+  categories: string[];
+  sources: RAGSource[];
+}
+
+// Búsqueda semántica — retorna contexto + categorías de los chunks recuperados
+export async function findRelevantContextWithMeta(query: string): Promise<RAGResult> {
   try {
     const db = getVectorDB();
 
-    // 1. Generar embedding solo de la query del usuario (única llamada API)
     const { embedding: queryEmbedding } = await embed({
       model: openai.embedding("text-embedding-3-small"),
       value: query,
     });
 
-    // 2. Calcular similitud coseno con documentos pre-embedidos (sin costo)
     const results = db
       .map((doc) => ({
         content: doc.content,
@@ -55,9 +61,8 @@ export async function findRelevantContext(query: string): Promise<string> {
         similarity: cosineSimilarity(queryEmbedding, doc.embedding),
       }))
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 4); // Top 4 documentos más relevantes
+      .slice(0, 3);
 
-    // 3. Log para debugging (solo en desarrollo)
     if (process.env.NODE_ENV === "development") {
       console.log("🔍 Query:", query);
       console.log(
@@ -70,40 +75,30 @@ export async function findRelevantContext(query: string): Promise<string> {
       );
     }
 
-    // 4. Si no hay resultados relevantes (similarity muy baja), retornar info general
-    if (results.length === 0 || results[0].similarity < 0.3) {
-      return `${knowledgeBase.personal.name} es ${knowledgeBase.personal.title}. ${knowledgeBase.personal.summary}`;
+    if (results.length === 0 || results[0].similarity < 0.35) {
+      return {
+        context: `${knowledgeBase.personal.name} es ${knowledgeBase.personal.title}. ${knowledgeBase.personal.summary}`,
+        categories: ["personal"],
+        sources: [],
+      };
     }
 
-    // 5. Retornar los chunks más relevantes
-    return results.map((r) => r.content).join("\n\n");
+    return {
+      context: results.map((r) => r.content).join("\n\n"),
+      categories: results.map((r) => r.category),
+      sources: results.map((r) => ({
+        category: r.category,
+        similarity: r.similarity,
+        preview: r.content.substring(0, 100),
+      })),
+    };
   } catch (error) {
     console.error("❌ Error en búsqueda semántica:", error);
-    // Fallback: retornar información general
-    return `${knowledgeBase.personal.name} es ${knowledgeBase.personal.title} especializado en ${knowledgeBase.personal.specialization}.`;
-  }
-}
-
-/**
- * Obtener contexto específico para respuestas breves
- */
-export async function getQuickContext(
-  query: string,
-): Promise<{ context: string; type: "brief" | "detailed" }> {
-  const lowerQuery = query.toLowerCase();
-
-  // Preguntas que requieren respuestas muy breves
-  if (lowerQuery.match(/^(hola|hi|hey|buenas|saludos)/)) {
     return {
-      context: `${knowledgeBase.personal.name}, ${knowledgeBase.personal.title}`,
-      type: "brief",
+      context: `${knowledgeBase.personal.name} es ${knowledgeBase.personal.title}. ${knowledgeBase.personal.summary}`,
+      categories: ["personal"],
+      sources: [],
     };
   }
-
-  // Para todo lo demás, usar el sistema RAG con embeddings
-  const context = await findRelevantContext(query);
-  return {
-    context,
-    type: "detailed",
-  };
 }
+

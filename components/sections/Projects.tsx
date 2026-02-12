@@ -23,6 +23,30 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
+    title: "Asistente de Productividad con IA",
+    description:
+      "Aplicación de gestión de proyectos basada en IA conversacional con arquitectura MCP y flujos orquestados con n8n, integrando LLMs para gestionar tareas, calendario y notas",
+    images: ["/projects/productivity-mcp/1.avif"],
+    tags: [
+      "MCP",
+      "Next.js",
+      "TypeScript",
+      "OpenAI",
+      "n8n",
+      "Telegram Bot",
+      "Prisma",
+    ],
+  },
+  {
+    id: 4,
+    title: "Robot Guía Móvil con LLMs",
+    description:
+      "Robot móvil autónomo orientado a la atención de usuarios mediante interacción en lenguaje natural basada en modelos de lenguaje generativos",
+    images: ["/projects/robot-guia/1.avif"],
+    tags: ["LLMs", "LangChain", "OpenAI", "Python", "ESP32", "TTS"],
+  },
+  {
+    id: 2,
     title: "Sistema LiDAR Volumétrico",
     description:
       "Estimación y reconstrucción volumétrica mediante aprendizaje no supervisado con tecnología LiDAR para aplicaciones industriales",
@@ -34,7 +58,7 @@ const projects: Project[] = [
     tags: ["Unsupervised Learning", "Computer Vision", "LiDAR", "Python"],
   },
   {
-    id: 2,
+    id: 3,
     title: "Detección de Anomalías",
     description:
       "Sistema de ML para detección de anomalías en series temporales para aplicaciones industriales",
@@ -42,7 +66,7 @@ const projects: Project[] = [
     tags: ["Machine Learning", "Time Series", "Python", "TensorFlow"],
   },
   {
-    id: 3,
+    id: 7,
     title: "Geolocalización de Postes",
     description:
       "Sistema de detección y geolocalización automática de postes urbanos usando YOLO en Nvidia Jetson con integración de LiDAR y GPS",
@@ -52,14 +76,6 @@ const projects: Project[] = [
       "/projects/agentes/3.avif",
     ],
     tags: ["YOLO", "Nvidia Jetson", "Python", "LiDAR", "GPS"],
-  },
-  {
-    id: 4,
-    title: "Robot Guía con LLMs",
-    description:
-      "Prototipo de robot móvil basado en modelos de lenguaje para gestión autónoma de consultas en espacios de exposición",
-    images: ["/projects/robot-guia/1.avif"],
-    tags: ["LLMs", "OpenAI", "ROS2", "Python"],
   },
   {
     id: 5,
@@ -72,14 +88,6 @@ const projects: Project[] = [
       "/projects/hexapodo/3.gif",
     ],
     tags: ["Reinforcement Learning", "Computer Vision", "ROS2", "Python"],
-  },
-  {
-    id: 6,
-    title: "Robot Inchworm ISSSP",
-    description:
-      "Robot con adherencia electrostática y percepción multisensorial - Finalista de Spatial Payload Competition",
-    images: ["/projects/inchworm/1.avif", "/projects/inchworm/2.avif"],
-    tags: ["Robótica", "Sensores", "Control", "Mecatrónica"],
   },
 ];
 
@@ -129,7 +137,7 @@ export function ProjectsSection() {
   };
 
   return (
-    <div className="py-12 px-6 bg-muted/30">
+    <div className="py-12 px-6">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-12 flex items-center gap-3">
@@ -138,7 +146,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[280px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[280px]">
           {projects.map((project, index) => {
             const currentImageIndex = cardImageIndexes[project.id] || 0;
             const currentImage = project.images[currentImageIndex];
@@ -159,17 +167,20 @@ export function ProjectsSection() {
                 onMouseLeave={() => setHoveredId(null)}
                 onClick={() => openDialog(project)}
               >
-                {/* Background Image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5">
-                  <div
-                    className="absolute inset-0 bg-contain bg-center bg-no-repeat transition-transform duration-700 ease-out group-hover:scale-105"
-                    style={{
-                      backgroundImage: `url(${currentImage})`,
-                      backgroundColor: `hsl(var(--muted))`,
-                    }}
-                  />
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
+                {/* Background Image with Crossfade */}
+                <div className="absolute inset-0">
+                  {project.images.map((img, imgIdx) => (
+                    <div
+                      key={img}
+                      className="absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
+                      style={{
+                        backgroundImage: `url(${img})`,
+                        opacity: imgIdx === currentImageIndex ? 1 : 0,
+                      }}
+                    />
+                  ))}
+                  {/* Gradient overlay - always visible */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
                 </div>
 
                 {/* Award Badge */}
@@ -179,32 +190,30 @@ export function ProjectsSection() {
                   </div>
                 )}
 
-                {/* Content */}
-                <div className="relative h-full flex flex-col justify-end p-6 text-white">
-                  <div className="transform transition-all duration-300 group-hover:translate-y-0 translate-y-2">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2 line-clamp-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-gray-300 mb-4 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
-                      {project.description}
-                    </p>
+                {/* Content - always visible */}
+                <div className="relative h-full flex flex-col justify-end p-5 text-white">
+                  <h3 className="text-lg md:text-xl font-bold mb-1.5 line-clamp-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-xs text-gray-300 mb-3 line-clamp-2">
+                    {project.description}
+                  </p>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2.5 py-1 text-xs font-medium bg-white/20 backdrop-blur-sm rounded-full border border-white/20"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tags.length > 3 && (
-                        <span className="px-2.5 py-1 text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full">
-                          +{project.tags.length - 3}
-                        </span>
-                      )}
-                    </div>
+                  {/* Tags - always visible */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tags.slice(0, 4).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 text-[11px] font-medium bg-white/15 backdrop-blur-sm rounded-full border border-white/20"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {project.tags.length > 4 && (
+                      <span className="px-2 py-0.5 text-[11px] font-medium bg-white/10 backdrop-blur-sm rounded-full">
+                        +{project.tags.length - 4}
+                      </span>
+                    )}
                   </div>
 
                   {/* Image indicator */}
@@ -233,7 +242,7 @@ export function ProjectsSection() {
           open={!!selectedProject}
           onOpenChange={() => setSelectedProject(null)}
         >
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-auto p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle className="text-2xl">
                 {selectedProject?.title}
@@ -266,14 +275,14 @@ export function ProjectsSection() {
                       <button
                         type="button"
                         onClick={handlePrevImage}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all md:opacity-0 md:group-hover:opacity-100"
                       >
                         <ChevronLeft className="h-6 w-6" />
                       </button>
                       <button
                         type="button"
                         onClick={handleNextImage}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all md:opacity-0 md:group-hover:opacity-100"
                       >
                         <ChevronRight className="h-6 w-6" />
                       </button>

@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-02-10",
+    "source": "miguel_chumacero_cv.md"
+  },
+  "personal": {
+    "name": "Miguel Chumacero",
+    "title": "AI Engineer Jr. | Agentes IA y LLMs",
+    "summary": "AI Engineer Jr. especializado en LLMs, agentes conversacionales y agentic workflows. Formación en Ingeniería Mecatrónica (UNI), con experiencia real construyendo agentes con LangChain, LangGraph y arquitectura MCP, automatizaciones con n8n, y sistemas RAG. Combina visión computacional aplicada (LiDAR, YOLO) con IA generativa para crear soluciones end-to-end en entornos reales."
+  },
+  "contact": {
+    "email": "miguel.chumacero.b@gmail.com",
+    "github": "https://github.com/MiguelCh2903",
+    "location": "S.M.P, Lima, Perú",
+    "phone": "940369704"
+  },
+  "education": [
+    {
+      "institution": "Universidad Nacional de Ingeniería",
+      "program": "Ingeniería Mecatrónica",
+      "status": "10mo ciclo - en proceso de egreso",
+      "period": "2021 - Actualidad",
+      "highlights": [
+        "Director del área de Inteligencia Artificial y Robótica del Centro Avanzado de Mecatrónica Inteligente (2024-2025)",
+        "Participación en proyectos mecatrónicos y expoferias tecnológicas",
+        "Cursos destacados: Inteligencia Artificial, Control de Procesos, Gestión de Proyectos"
+      ]
+    },
+    {
+      "institution": "Instituto Cultural Peruano Norteamericano (ICPNA)",
+      "program": "Inglés Avanzado",
+      "period": "2018 - 2022"
+    }
+  ],
+  "skills": {
+    "generative_ai_llms": [
+      "OpenAI API",
+      "Anthropic API",
+      "Google AI",
+      "Groq",
+      "LangChain",
+      "MCP",
+      "Prompt Engineering",
+      "RAG",
+      "Embeddings",
+      "Chroma"
+    ],
+    "software_mlops": [
+      "Python",
+      "FastAPI",
+      "TypeScript",
+      "Next.js",
+      "Docker",
+      "Linux",
+      "Git/GitHub",
+      "n8n",
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
+      "SQLite",
+      "Prisma"
+    ],
+    "ml_computer_vision": [
+      "PyTorch",
+      "TensorFlow",
+      "YOLO",
+      "OpenCV",
+      "NLP clásico",
+      "Clasificación de texto",
+      "Extracción de información"
+    ],
+    "robotics_embedded": [
+      "ROS 2",
+      "C/C++",
+      "ESP32",
+      "Raspberry Pi",
+      "Integración LiDAR-cámara",
+      "Aprendizaje por refuerzo"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Industrias Pacha SAC",
+      "role": "Desarrollador de Inteligencia Artificial y Visión Computacional",
+      "period": "Abril 2025 - Enero 2026",
+      "summary": "Desarrollo de soluciones de IA y visión computacional para aplicaciones industriales.",
+      "highlights": [
+        "Sistema de estimación y reconstrucción volumétrica no supervisada con LiDAR",
+        "Modelo de detección de anomalías en series temporales",
+        "Sistema de geolocalización de elementos urbanos con visión computacional y deep learning",
+        "Interfaz gráfica 3D para visualización de reconstrucciones",
+        "Calibración LiDAR-cámara y diseño de carcasa funcional para entorno industrial"
+      ]
+    },
+    {
+      "company": "Centro Avanzado de Mecatrónica Inteligente (UNI)",
+      "role": "Unidad de Investigación - Proyectos de IA y Robótica",
+      "period": "Marzo 2024 - Diciembre 2025",
+      "summary": "Participación y liderazgo en proyectos de IA, visión computacional, robótica, IoT y automatización.",
+      "highlights": [
+        "Coordinación de equipos multidisciplinarios en proyectos de IA",
+        "Desarrollo de agentes conversacionales inteligentes",
+        "Integración de sistemas robóticos con control autónomo por aprendizaje por refuerzo"
+      ]
+    }
+  ],
+  "professional_projects": [
+    {
+      "name": "Sistema LiDAR Volumétrico Industrial",
+      "summary": "Estimación y reconstrucción volumétrica con IA no supervisada para aplicaciones industriales.",
+      "details": "Desarrollado en Industrias Pacha SAC. Incluyó pipeline de procesamiento, visualización 3D y calibración de sensores.",
+      "tech": ["Python", "LiDAR", "IA no supervisada", "Visualización 3D"],
+      "status": "Completado",
+      "year": "2025"
+    },
+    {
+      "name": "Detección de Anomalías en Series Temporales",
+      "summary": "Modelo de IA para detección automática de anomalías en datos temporales industriales.",
+      "details": "Implementado para análisis automatizado de datos en zonas urbanas y entornos industriales.",
+      "tech": ["Python", "Machine Learning", "Series temporales"],
+      "status": "Completado",
+      "year": "2025"
+    },
+    {
+      "name": "Geolocalización de Elementos Urbanos",
+      "summary": "Sistema de geolocalización de elementos urbanos mediante visión computacional y deep learning.",
+      "details": "Incluyó calibración LiDAR-cámara y despliegue para análisis de campo.",
+      "tech": ["Python", "Computer Vision", "Deep Learning", "LiDAR"],
+      "status": "Completado",
+      "year": "2025"
+    }
+  ],
+  "personal_projects": [
+    {
+      "name": "Asistente de Productividad con IA (Arquitectura MCP)",
+      "summary": "Aplicación de gestión de proyectos con IA conversacional y agentic workflows.",
+      "details": "Implementación de servidor MCP (Model Context Protocol) en TypeScript para gestión centralizada de datos y operaciones. Arquitectura de automatización con n8n como orquestador de agentic workflows, conectando Telegram Bot API con servicios LLM. Integración de OpenAI API con function calling para ejecutar comandos sobre tasks, calendar, notes y tags. Interfaz visual en Next.js como capa de visualización read-only, priorizando la interacción conversacional. Sistema de IA conversacional con razonamiento, ejecución de herramientas y retroalimentación en bucle — agentic workflow completo.",
+      "tech": ["TypeScript", "Next.js", "MCP SDK", "n8n", "OpenAI API", "Telegram API", "SQLite", "Prisma"],
+      "status": "En desarrollo",
+      "year": "2025-2026"
+    },
+    {
+      "name": "Asistente Personal de IA para Productividad",
+      "summary": "Asistente generativo para gestión de tareas, horarios y consultas de información local/externa.",
+      "details": "Plataforma extensible basada en agentes conversacionales diseñada con LangGraph para orquestación de flujos multi-agente. Flujos conversacionales avanzados para gestión de tareas, horarios y consultas de información local/externa. Integración de capacidades multimodales: análisis de imágenes y documentos. Arquitectura pensada para escalar a nuevos agentes especializados de forma modular.",
+      "tech": ["Python", "JavaScript", "Rust", "LangGraph"],
+      "status": "Completado",
+      "year": "2024-2025"
+    },
+    {
+      "name": "Robot Guía Móvil con IA Generativa",
+      "summary": "Robot autónomo para atención de usuarios mediante interacción en lenguaje natural.",
+      "details": "Sistema conversacional con LangChain + OpenAI API para gestión de diálogo en tiempo casi real. Pipeline NLP completo: reconocimiento de voz → razonamiento LLM → síntesis de voz (TTS cloud). Arquitectura software modular para gestión de diálogo, procesamiento de lenguaje natural y generación de respuestas contextuales. Sistema físico-digital completo: diseño mecánico, fabricación por impresión 3D, control de movimiento omnidireccional y comunicación inalámbrica bidireccional para control y monitoreo remoto.",
+      "tech": ["Python", "LangChain", "OpenAI API", "ESP32", "Impresión 3D"],
+      "status": "Completado",
+      "year": "2025"
+    },
+    {
+      "name": "Asistente Domótico Inteligente V2",
+      "summary": "Rediseño de asistente domótico con arquitectura modular, escalable y de baja latencia.",
+      "details": "Custom components para Home Assistant, arquitectura en Docker e integración de múltiples dispositivos IoT.",
+      "tech": ["Python", "Docker", "Home Assistant", "Raspberry Pi", "ESP32", "APIs de IA"],
+      "status": "Completado",
+      "year": "2024-2025"
+    },
+    {
+      "name": "Sistema de Control para Drones en Turbulencias Extremas",
+      "summary": "Software de control de vuelo con estrategias de aprendizaje por refuerzo para mejorar estabilidad.",
+      "details": "Optimización de rendimiento computacional para ejecución en tiempo real.",
+      "tech": ["Python", "C", "CUDA", "JavaScript", "Reinforcement Learning"],
+      "status": "Completado",
+      "year": "2024-2025"
+    },
+    {
+      "name": "Robot Hexápodo de Exploración",
+      "summary": "Robot de exploración autónoma con control inteligente de locomoción.",
+      "details": "Aplicación de aprendizaje por refuerzo y visión artificial para mejorar estabilidad y movimiento.",
+      "tech": ["Python", "Reinforcement Learning", "Visión Artificial", "Fusion360", "SolidWorks"],
+      "status": "Completado",
+      "year": "2024"
+    },
+    {
+      "name": "Asistente Domótico Inteligente",
+      "summary": "Asistente por voz distribuido con captura/transmisión de audio en tiempo real.",
+      "details": "Integración de reconocimiento de voz, NLP y TTS con interfaz web de monitoreo.",
+      "tech": ["Python", "ESP32/C++", "JavaScript", "Home Assistant", "Raspberry Pi", "APIs de IA"],
+      "status": "Completado",
+      "year": "2023-2024"
+    }
+  ]
+}

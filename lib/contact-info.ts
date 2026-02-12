@@ -11,12 +11,12 @@ export const contactInfo = {
   },
 
   // Bio corta para el Hero
-  tagline: "Ingeniería Mecatrónica",
+  tagline: "AI Engineer Jr. | Agentes IA y LLMs",
   description:
-    "Desarrollador especializado en sistemas inteligentes, visión artificial y automatización avanzada. Transformando ideas en soluciones tecnológicas de vanguardia.",
+    "Perfil enfocado en agentes de IA, LLMs, RAG y automatización inteligente, con experiencia aplicada en proyectos de visión computacional y sistemas reales.",
 
   // Áreas de especialización
-  expertise: ["Desarrollo de Software", "Inteligencia Artificial", "Sistemas Autónomos"],
+  expertise: ["Agentes IA", "LLMs y RAG", "Automatización Inteligente"],
 
   // CV
   cv: {

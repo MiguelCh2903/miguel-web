@@ -1,67 +1,73 @@
 # MIGUEL CHUMACERO
 
-+ S.M.P, Lima, Perú  
-# miguel.chumacero.b@gmail.com  
-📞 940369704  
-§ MiguelCh2903
+📍 S.M.P, Lima, Perú  
+📧 miguel.chumacero.b@gmail.com  
+📱 940369704  
+🔗 MiguelCh2903  
 
-## Sobre mi
+---
 
-Estudiante de Ingeniería Mecatrónica en proceso de egreso con pasión por la innovación tecnológica. Cuento con experiencia real desarrollando soluciones de automatización basadas en Inteligencia Artificial, en áreas como visión computacional, procesamiento de datos sensoriales y agentes conversacionales. Me destaco por integrar sistemas hardware-software y crear soluciones prácticas que optimizan procesos reales. Busco contribuir a la transformación digital de la industria mediante soluciones innovadoras con impacto tangible.
+## Sobre mí
+
+Estudiante de Ingeniería Mecatrónica en proceso de egreso apasionado por la Inteligencia Artificial Generativa. He trabajado construyendo agentes conversacionales, automatizaciones inteligentes y sistemas que integran modelos de lenguaje en aplicaciones reales. Mi formación mecatrónica me permite combinar software y hardware para crear soluciones completas. Busco seguir desarrollándome en el campo de la IA aplicada, creando herramientas que realmente simplifiquen y mejoren procesos.
+
+---
 
 ## Educación
 
-### Universidad Nacional de Ingeniería
-
+### Universidad Nacional de Ingeniería  
 **Estudiante de Ingeniería Mecatrónica – 10mo ciclo**  
-2021 – Actualidad
+2021 – Actualidad  
 
 - Gestión, organización y participación en proyectos Mecatrónicos, participación en Expoferias tecnológicas y adquisición de conocimientos en Inteligencia Artificial, Agentes Conversacionales, Desarrollo de Software y Robótica.
-- Director del área de Automatización y Robótica del Centro Avanzado de Mecatrónica Inteligente (Periodo 2024-2025)
+- Director del área de Inteligencia Artificial y Robótica del Centro Avanzado de Mecatrónica Inteligente (Periodo 2024–2025)
 - Cursos destacados: Inteligencia Artificial, Control de Procesos, Gestión de Proyectos
 
-### Instituto Cultural Peruano Norteamericano - ICPNA
-
+### Instituto Cultural Peruano Norteamericano – ICPNA  
 **Inglés Avanzado**  
-2018 – 2022
+2018 – 2022  
+
+---
 
 ## Habilidades
 
-### Software
+### Inteligencia Artificial Generativa & LLMs
 
-- Python: IA, Machine Learning, Computer Vision, Deep Learning, Procesamiento de datos, Agentes Conversacionales
-- Frameworks IA: TensorFlow, PyTorch, Ultralytics (YOLO), OpenCV, Langchain, n8n
-- ROS2: Desarrollo de sistemas robóticos, integración de sensores, control de robots
-- APIs: Diseño e integración de servicios REST, manejo de APIs externas
-- Docker: Contenedorización de aplicaciones, despliegue de servicios
-- Linux: Administración de sistemas, desarrollo en entornos Unix
-- SQL y NoSQL: Base de datos (PostgreSQL, MySQL, MongoDB)
-- Git y Github: Control de Versiones
-- C y C++: Robótica, Sistemas Embebidos, Interfaces Gráficas (Qt, GTK)
-- MATLAB: Sistemas de Control, Modelado de sistemas
-- Html, CSS, JavaScript: Creación de páginas/interfaces web
+- APIs de LLMs: OpenAI, Anthropic, Google AI y Groq para desarrollo de aplicaciones inteligentes
+- Agentes de IA: Diseño y orquestación con LangChain, creación de tools personalizadas, MCPs para integración con bases de datos y uso eficiente de herramientas
+- Prompt Engineering: Optimización de prompts, diseño de skills y flujos conversacionales avanzados
+- RAG y Embeddings: Implementación de sistemas de recuperación aumentada, bases de datos vectoriales (Chroma) y búsqueda semántica
+- Python: Desarrollo con FastAPI, librerías de ML y prototipado rápido
 
-### Electrónicas
+### Desarrollo de Software & MLOps
 
-- Diseño y layout de circuitos impresos: PCBs
-- Software PCBs: EasyEDA, KiCAD
-- Soldadura electrónica
-- Experiencia en implementación de sistemas embebidos con STM32, ESP32, Raspberry Pi
+- APIs y Backend: Diseño e integración de servicios REST con FastAPI
+- Bases de Datos: SQL, NoSQL (PostgreSQL, MySQL, MongoDB) y vectoriales (Chroma)
+- Docker: Contenerización y despliegue de aplicaciones
+- Linux: Desarrollo y operación en entornos productivos
+- Git / GitHub: Control de versiones y trabajo colaborativo
+- Automatización: Orquestación de flujos con n8n
 
-### Mecánicas
+### Machine Learning & Computer Vision
 
-- Diseño y Análisis de piezas y ensambles mecánicos
-- Software de diseño: SolidWorks, AutoCAD, Fusion360
-- Prototipado en Impresión 3D
+- Deep Learning: Entrenamiento de modelos con PyTorch y TensorFlow
+- Computer Vision: Detección y segmentación con YOLO y OpenCV
+- NLP Clásico: Procesamiento de lenguaje natural, clasificación de texto y extracción de información
+
+### Robótica y Sistemas Embebidos
+
+- ROS 2: Integración de percepción, sensores y control
+- C / C++: Sistemas embebidos y aplicaciones de alto rendimiento
+
+---
 
 ## Experiencia
 
-### Industrias Pacha SAC
-
+### Industrias Pacha SAC  
 **Desarrollador de Inteligencia Artificial y Visión Computacional**  
-Abril 2025 – Diciembre 2025
+Abril 2025 – Enero 2026  
 
-Desarrollo de soluciones de inteligencia artificial y visión computacional para aplicaciones industriales. Implementación de modelos de IA para procesamiento de nubes de puntos LiDAR, detección de anomalías y análisis automatizado de datos urbanos.
+Desarrollo de soluciones de inteligencia artificial y visión computacional para aplicaciones industriales. Implementación de modelos de IA para procesamiento de nubes de puntos LiDAR, detección de anomalías y análisis automatizado de datos en zonas urbanas.
 
 **Aportes:**
 
@@ -69,63 +75,78 @@ Desarrollo de soluciones de inteligencia artificial y visión computacional para
 - Implementación de modelo de IA para detección de anomalías en series temporales
 - Desarrollo de sistema de geolocalización de elementos urbanos mediante visión computacional y deep learning
 - Diseño e implementación de interfaz gráfica de visualización 3D para reconstrucción de geometrías complejas
-- Calibración de sistemas LiDAR-cámara y diseño de carcasa funcional para entornos industriales
+- Calibración de sistemas LiDAR–cámara y diseño de carcasa funcional para entornos industriales
 
-### Centro Avanzado de Mecatrónica Inteligente
-
+### Centro Avanzado de Mecatrónica Inteligente  
 **Unidad de Investigación de la Facultad de Ingeniería Mecánica**  
-Enero 2024 – Actualidad
+Marzo 2024 – Diciembre 2025  
 
-- Participación activa en proyectos de mecatrónica enfocados en Inteligencia Artificial, visión computacional, robótica, IoT y automatización
+- Participación activa en proyectos de mecatrónica enfocados en Inteligencia Artificial, Visión Computacional, Robótica, IoT y Automatización
 - Liderazgo en proyectos de IA, coordinando equipos multidisciplinarios para el desarrollo de soluciones inteligentes
 - Experiencia en trabajo colaborativo, contribuyendo a proyectos en equipo con enfoque en innovación tecnológica
-- Implementación de sistemas de IA en robótica mediante aprendizaje por refuerzo para control autónomo y desarrollo de agentes conversacionales para interacción humano-robot
+- Desarrollo de agentes conversacionales inteligentes que permiten interacción natural y contextual con sistemas automatizados, e integración de sistemas robóticos con control autónomo mediante aprendizaje por refuerzo
 
-## Proyectos Individuales
+---
 
-github.com/MiguelCh2903
+## Proyectos Académicos y Personales
 
-### Robot guía móvil basado en IA generativa - 2025
+🔗 github.com/MiguelCh2903  
 
-- Desarrollo de robot móvil autónomo para gestión de consultas en espacios de exposición mediante IA generativa de lenguaje
-- Diseño e impresión 3D del prototipo con sistema de movimiento omnidireccional para navegación ágil
-- Implementación de comunicación inalámbrica para control y transmisión de datos en tiempo real
-- Integración de servicios en la nube para procesamiento de lenguaje natural y síntesis de voz
-- Herramientas: Python, ESP32, Impresión 3D, APIs de IA generativa, Servicios de audio en la nube
+### Asistente de Productividad con IA – Arquitectura MCP – 2025/2026
 
-### Asistente Domótico Inteligente V2 - 2024/25
+- Desarrollo de una aplicación de gestión de proyectos basada en IA conversacional con arquitectura MCP y agentic workflows
+- Implementación de servidor MCP (Model Context Protocol) en TypeScript para gestión centralizada de datos y operaciones
+- Diseño de arquitectura de automatización usando n8n como orquestador de workflows, conectando Telegram Bot API con servicios LLM
+- Integración de OpenAI API para procesamiento de lenguaje natural y ejecución de comandos sobre tasks, calendar, notes y tags
+- Desarrollo de interfaz visual en Next.js como capa de visualización read-only, priorizando interacción conversacional
+- Herramientas: TypeScript, Next.js, MCP SDK, n8n, OpenAI API, Telegram API, SQLite, Prisma
 
-- Actualización completa del sistema domótico con modelos de IA más avanzados y eficientes
-- Implementación de servidor especializado con arquitectura basada en contenedores Docker para mejor escalabilidad y mantenimiento
-- Integración de mayor cantidad de dispositivos domóticos (luces inteligentes, sensores, electrodomésticos, sistemas de seguridad)
-- Optimización del rendimiento y reducción de latencia en el procesamiento de comandos de voz
-- Mejora en la interfaz de usuario y sistema de monitoreo en tiempo real
-- Herramientas: Docker, Python, MQTT, APIs de IA avanzadas, Raspberry Pi, ESP32
+### Asistente Personal de IA para Productividad – 2024/25
 
-### Sistema de control para drones frente a turbulencias extremas - 2024/25
+- Desarrollo de un asistente personal basado en IA generativa enfocado en productividad y gestión de información
+- Implementación de flujos conversacionales avanzados para gestión de tareas, horarios y consultas sobre información local y externa
+- Integración de capacidades multimodales, incluyendo análisis de imágenes y documentos
+- Diseño del sistema como plataforma extensible basada en agentes conversacionales
+- Herramientas: Python, JavaScript, Rust, LangGraph
 
-- Desarrollo de software para controlador de vuelo en drones para movimientos ágiles, dinámicos y condiciones climáticas extremas
-- Control basado en Inteligencia Artificial
-- Herramientas: Python, JavaScript, C, CUDA
+### Robot Guía Móvil basado en IA Generativa – 2025
 
-### Asistente personal IA para productividad - 2024/25
+- Desarrollo de un robot móvil autónomo orientado a la atención de usuarios mediante interacción en lenguaje natural basada en IA generativa
+- Implementación de sistema conversacional usando LangChain y OpenAI API para procesamiento de diálogo en tiempo casi real
+- Integración de servicios de NLP y TTS en la nube, con comunicación inalámbrica bidireccional para control y monitoreo
+- Diseño de arquitectura software para gestión de diálogo, procesamiento de lenguaje y síntesis de voz
+- Desarrollo de un sistema físico–digital completo: diseño mecánico, fabricación mediante impresión 3D y control de movimiento omnidireccional
+- Herramientas: Python, LangChain, OpenAI API, ESP32, servicios de audio en la nube, impresión 3D
 
-- Desarrollo de un asistente basado en inteligencia artificial generativa para uso personal
-- Manejo de horarios, productividad, búsqueda en internet, búsqueda en base de datos/documentos locales, capacidad de analizar imágenes
-- Estado: Continuo desarrollo
-- Herramientas: Python, JavaScript, Rust, LangGraph (Agentes Conversacionales)
+### Asistente Domótico Inteligente V2 – 2024/25
 
-### Robot Hexápodo de exploración - 2024
+- Rediseño completo de un asistente domótico inteligente con enfoque en escalabilidad, modularidad y baja latencia
+- Desarrollo de custom components para Home Assistant orientados a interacción por voz mediante IA
+- Implementación de una arquitectura basada en contenedores Docker para la orquestación de servicios de IA
+- Integración de múltiples dispositivos IoT para control mediante lenguaje natural
+- Optimización del procesamiento de comandos de voz y reducción de latencia en flujos de reconocimiento y respuesta
+- Desarrollo de herramientas de monitoreo y control en tiempo real
+- Herramientas: Python, Docker, Home Assistant, APIs de IA, Raspberry Pi, ESP32
 
-- Desarrollo de un robot hexápodo para exploración en terrenos difíciles, con movimiento optimizado mediante Inteligencia Artificial
-- Rol: Diseño mecánico base, supervisión del ensamblaje y desarrollo del control de movimiento mediante IA (Aprendizaje por Refuerzo y Visión Artificial)
-- Herramientas: Fusion360, SolidWorks, Python, Inteligencia Artificial (Aprendizaje por Refuerzo y Visión Artificial)
+### Sistema de Control para Drones frente a Turbulencias Extremas – 2024/25
 
-### Asistente Domótico Inteligente - 2023/2024
+- Desarrollo de software para controladores de vuelo orientados a operación en condiciones aerodinámicas adversas
+- Implementación de estrategias de control asistidas por Aprendizaje por Refuerzo para mejorar estabilidad y respuesta dinámica
+- Optimización del rendimiento computacional para ejecución en tiempo real
+- Herramientas: Python, C, CUDA, JavaScript
 
-- Integración del protocolo MQTT mediante el broker Mosquitto para la comunicación entre dispositivos domóticos y el servidor local, permitiendo el control de luces, TV y otros equipos
-- Desarrollo de un asistente basado en ESP32 con transmisión inalámbrica de datos de audio por UDP y comunicación de estados a través de MQTT
-- Desarrollo de interfaz de usuario para monitoreo y configuración de estados domóticos (Html / CSS / JavaScript)
-- Implementación de inteligencia artificial a través de servicios en la nube y un servidor local (Raspberry Pi), utilizando proveedores como Deepgram, OpenAI y ElevenLabs para el procesamiento de voz y texto
-- Herramientas: ChatGPT API, ESP32/C++, JavaScript, Python, Raspberry Pi 5
+### Robot Hexápodo de Exploración – 2024
 
+- Desarrollo de un robot hexápodo para exploración autónoma en terrenos complejos
+- Diseño del sistema de control de locomoción asistido por Inteligencia Artificial
+- Implementación de Aprendizaje por Refuerzo y Visión Artificial para optimizar estabilidad y movimiento
+- Rol: Diseño mecánico base y desarrollo del control inteligente de movimiento
+- Herramientas: Python, Aprendizaje por Refuerzo, Visión Artificial, Fusion360, SolidWorks
+
+### Asistente Domótico Inteligente – 2023/2024
+
+- Desarrollo de custom components para Home Assistant orientados a interacción por voz mediante arquitectura distribuida
+- Desarrollo de un sistema de captura y transmisión de audio en tiempo real desde dispositivos embebidos
+- Integración de servicios de IA para reconocimiento de voz, procesamiento de lenguaje y síntesis de voz
+- Desarrollo de interfaz web para monitoreo y configuración del sistema
+- Herramientas: Python, ESP32/C++, JavaScript, Home Assistant, Raspberry Pi, APIs de IA

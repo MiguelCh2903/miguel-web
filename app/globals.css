@@ -134,3 +134,113 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================
+   DOT PATTERN BACKGROUND
+   Sutil y elegante con soporte light/dark mode
+   ============================================ */
+
+.dot-pattern {
+  --dot-color: oklch(0.556 0 0 / 15%);
+  --dot-size: 1.5px;
+  --dot-space: 30px;
+
+  background-image: radial-gradient(
+    circle at center,
+    var(--dot-color) var(--dot-size),
+    transparent var(--dot-size)
+  );
+  background-size: var(--dot-space) var(--dot-space);
+  background-position: 0 0;
+}
+
+/* Dark mode */
+.dark .dot-pattern {
+  --dot-color: oklch(0.708 0 0 / 8%);
+}
+
+/* Variante más sutil para secciones específicas */
+.dot-pattern-subtle {
+  --dot-color: oklch(0.556 0 0 / 6%);
+}
+
+.dark .dot-pattern-subtle {
+  --dot-color: oklch(0.708 0 0 / 3%);
+}
+
+/* ============================================
+   CHAT ANIMATIONS
+   ============================================ */
+
+/* Streaming cursor blink */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.streaming-cursor::after {
+  content: "▋";
+  display: inline-block;
+  margin-left: 1px;
+  animation: blink-cursor 0.8s step-end infinite;
+  color: currentColor;
+  opacity: 0.7;
+}
+
+/* Agent trace expand/collapse (no JS animation library needed) */
+.agent-trace-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.agent-trace-content > * {
+  overflow: hidden;
+}
+
+.agent-trace-open {
+  grid-template-rows: 1fr;
+}
+
+/* Similarity bar grow animation */
+@keyframes grow-width {
+  from { width: 0; }
+  to { width: var(--target-width, 100%); }
+}
+
+.similarity-bar {
+  animation: grow-width 0.5s ease-out forwards;
+}
+
+/* ============================================
+   MARQUEE ANIMATION
+   ============================================ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Chat message fade-in + slide-up */
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-message-in {
+  animation: message-in 0.18s ease-out both;
+}

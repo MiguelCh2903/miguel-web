@@ -5,20 +5,40 @@ import { DownloadCVButton } from "@/components/download-cv-button";
 import { Button } from "@/components/ui/button";
 import { contactInfo } from "@/lib/contact-info";
 
+const SKILLS = [
+  "AI",
+  "Deep Learning",
+  "Computer Vision",
+  "LLMs & Agentes",
+  "Python",
+  "TensorFlow",
+  "PyTorch",
+  "Robótica",
+  "RAG",
+  "LangChain",
+  "LangGraph",
+  "FastAPI",
+  "Docker",
+  "n8n",
+  "OpenCV",
+  "ROS2",
+  "TypeScript",
+  "OpenAI API",
+  "MCP",
+  "Anthropic",
+];
+
 export function Hero() {
   return (
     <section className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center px-6 py-20">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-muted/20" />
-
       {/* Decorative Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
-          className="absolute left-0 top-0 h-125 w-125 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"
+          className="absolute left-0 top-0 h-125 w-125 -translate-x-1/2 rounded-full bg-primary/5 blur-3xl animate-pulse"
           style={{ animationDuration: "8s" }}
         />
         <div
-          className="absolute right-0 top-1/2 h-125 w-125 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"
+          className="absolute right-0 top-1/2 h-125 w-125 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl animate-pulse"
           style={{ animationDuration: "8s", animationDelay: "4s" }}
         />
       </div>
@@ -27,12 +47,16 @@ export function Hero() {
         <div className="flex flex-col items-center text-center">
           {/* Badge */}
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm backdrop-blur-sm">
-            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
             <span className="text-muted-foreground">{contactInfo.tagline}</span>
+            <Sparkles className="h-4 w-4 text-primary" />
           </div>
 
           {/* Main Heading */}
-          <h1 className="mb-6 bg-linear-to-br from-foreground to-foreground/70 bg-clip-text text-5xl font-bold leading-tight tracking-tight text-transparent sm:text-6xl md:text-7xl md:leading-tight">
+          <h1 className="mb-6 bg-linear-to-br from-foreground to-foreground/70 bg-clip-text text-5xl font-bold leading-normal tracking-tight text-transparent sm:text-6xl md:text-7xl md:leading-normal">
             {contactInfo.name}
           </h1>
 
@@ -99,25 +123,22 @@ export function Hero() {
             </a>
           </div>
 
-          {/* Skills Tags */}
-          <div className="mt-16 flex flex-wrap justify-center gap-3">
-            {[
-              "AI",
-              "Deep Learning",
-              "Computer Vision",
-              "LLMs & Agentes",
-              "Python",
-              "TensorFlow",
-              "PyTorch",
-              "Robótica",
-            ].map((skill) => (
-              <span
-                key={skill}
-                className="rounded-full border border-border bg-muted/50 px-4 py-2 text-sm text-muted-foreground backdrop-blur-sm"
-              >
-                {skill}
-              </span>
-            ))}
+          {/* Skills Marquee */}
+          <div className="relative mt-16 w-full max-w-2xl overflow-hidden marquee-container">
+            {/* Fade left */}
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-background to-transparent z-10" />
+            {/* Fade right */}
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-background to-transparent z-10" />
+            <div className="flex gap-3 marquee-track">
+              {[...SKILLS, ...SKILLS].map((skill, i) => (
+                <span
+                  key={i}
+                  className="rounded-full border border-border bg-muted/50 px-4 py-2 text-sm text-muted-foreground backdrop-blur-sm whitespace-nowrap"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

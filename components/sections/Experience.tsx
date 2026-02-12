@@ -11,8 +11,8 @@ interface ExperienceItem {
 const experiences: ExperienceItem[] = [
   {
     company: "Industrias Pacha SAC",
-    role: "Practicante en Ingeniería Mecatrónica",
-    period: "Abril 2025 - Diciembre 2025",
+    role: "Desarrollador de IA y Visión Computacional",
+    period: "Abril 2025 - Enero 2026",
     description:
       "Desarrollo de soluciones de visión computacional e inteligencia artificial para aplicaciones industriales. Implementación de tecnologías avanzadas de sensores LiDAR y sistemas de detección automatizada para optimización de procesos y análisis de datos urbanos.",
     highlights: [
@@ -26,15 +26,15 @@ const experiences: ExperienceItem[] = [
   {
     company: "Centro Avanzado de Mecatrónica Inteligente (CAMI-UNI)",
     role: "Investigador & Project Lead",
-    period: "Enero 2024 - Presente",
+    period: "Enero 2024 - Diciembre 2025",
     description:
       "Universidad Nacional de Ingeniería · Unidad de Investigación de la Facultad de Ingeniería Mecánica",
     highlights: [
-      "🏆 Miembro del equipo finalista del Spatial Payload Competition ISSSP: Desarrollo de robot inchworm con adherencia electrostática y percepción multisensorial",
-      "Director del proyecto de prototipo de robot guía móvil basado en IA generativa de lenguaje (LLMs) para la gestión autónoma de consultas en espacios de exposición",
-      "Desarrollo de agentes conversacionales y asistentes de productividad utilizando LangGraph, arquitecturas RAG y servicios de IA (OpenAI, Deepgram, ElevenLabs)",
-      "Dirección de proyecto de robot hexápodo de exploración con movimiento optimizado mediante aprendizaje por refuerzo y visión artificial",
-      "Desarrollo de sistemas de control basados en IA para drones y participación en proyectos de investigación en robótica avanzada e IoT",
+      "Participación activa en proyectos de mecatrónica enfocados en Inteligencia Artificial, Visión Computacional, Robótica, IoT y Automatización",
+      "Liderazgo en proyectos de IA, coordinando equipos multidisciplinarios para el desarrollo de soluciones inteligentes",
+      "Experiencia en trabajo colaborativo, contribuyendo a proyectos en equipo con enfoque en innovación tecnológica",
+      "Desarrollo de agentes conversacionales inteligentes que permiten interacción natural y contextual con sistemas automatizados",
+      "Integración de sistemas robóticos con control autónomo mediante aprendizaje por refuerzo",
     ],
   },
 ];

@@ -1,158 +1,173 @@
-/**
- * Script para pre-generar embeddings de la knowledge base
- *
- * Uso:
- *   pnpm tsx scripts/generate-embeddings.ts
- *
- * Este script se ejecuta UNA SOLA VEZ (o cuando actualices el contenido)
- * y genera todos los embeddings que se usarán en producción.
- *
- * Costo aproximado: ~$0.0004 USD por ejecución (20 chunks * ~100 tokens c/u)
- */
-
-import fs from "fs";
-import path from "path";
-import { config } from "dotenv";
-import { embed } from "ai";
+import "dotenv/config";
 import { openai } from "@ai-sdk/openai";
-import knowledgeBase from "../lib/knowledge-base.json";
+import { embedMany } from "ai";
+import { readFile, writeFile } from "node:fs/promises";
+import * as path from "node:path";
 
-// Cargar variables de entorno desde .env (usa .env.example como plantilla)
-config({ path: path.join(process.cwd(), '.env') });
-
-interface EmbeddedDocument {
-  content: string;
-  category: string;
-  embedding: number[];
+interface KnowledgeBase {
+  personal: { name: string; title: string; summary: string };
+  contact: { email: string; github: string; location: string; phone?: string };
+  education: Array<{
+    institution: string;
+    program: string;
+    period?: string;
+    status?: string;
+    highlights?: string[];
+  }>;
+  experience: Array<{
+    company: string;
+    role: string;
+    period: string;
+    summary: string;
+    highlights?: string[];
+  }>;
+  skills: Record<string, string[]>;
+  professional_projects: Array<Project>;
+  personal_projects: Array<Project>;
 }
 
-function createDocumentChunks(): Array<{ content: string; category: string }> {
-  const chunks: Array<{ content: string; category: string }> = [];
+interface Project {
+  name: string;
+  summary: string;
+  details: string;
+  tech: string[];
+  status: string;
+  year: string;
+}
 
-  // Chunk 1: Información personal
+interface DocumentChunk {
+  content: string;
+  category: string;
+}
+
+async function loadKnowledgeBase(): Promise<KnowledgeBase> {
+  const kbPath = path.join(process.cwd(), "lib", "knowledge-base.json");
+  const raw = await readFile(kbPath, "utf-8");
+  return JSON.parse(raw) as KnowledgeBase;
+}
+
+function toProjectChunk(project: Project, bucket: "professional" | "personal"): DocumentChunk {
+  return {
+    category: `${bucket}_project_detail`,
+    content: [
+      `Proyecto: ${project.name}`,
+      `Resumen: ${project.summary}`,
+      `Detalles: ${project.details}`,
+      `Tecnologías: ${project.tech.join(", ")}`,
+      `Estado: ${project.status}`,
+      `Año: ${project.year}`,
+    ].join(". "),
+  };
+}
+
+function buildChunks(kb: KnowledgeBase): DocumentChunk[] {
+  const chunks: DocumentChunk[] = [];
+
   chunks.push({
-    content: `${knowledgeBase.personal.name} es ${knowledgeBase.personal.title} especializado en ${knowledgeBase.personal.specialization}. ${knowledgeBase.personal.summary}. Ubicación: ${knowledgeBase.personal.location}. Idiomas: ${knowledgeBase.personal.languages.join(", ")}.`,
     category: "personal",
+    content: `${kb.personal.name} es ${kb.personal.title}. ${kb.personal.summary}`,
   });
 
-  // Chunks de experiencia laboral (cada experiencia = 1 chunk)
-  knowledgeBase.experience.forEach((exp: any) => {
-    chunks.push({
-      content: `Experiencia: ${exp.position} en ${exp.company} (${exp.period}). ${exp.description} Responsabilidades principales: ${exp.responsibilities.join("; ")}.`,
-      category: "experience",
-    });
-  });
-
-  // Chunks de proyectos (cada proyecto = 1 chunk)
-  knowledgeBase.projects.forEach((project: any) => {
-    const achievement = project.achievement || "";
-    chunks.push({
-      content: `Proyecto: ${project.title} (${project.category}). ${project.description} Tecnologías: ${project.technologies.join(", ")}. Estado: ${project.status}. ${achievement}`,
-      category: "project",
-    });
-  });
-
-  // Chunk de educación
-  const edu = knowledgeBase.education;
-  const highlights = ((edu.highlights as string[]) || []).join(". ");
   chunks.push({
-    content: `Educación: ${edu.degree} en ${edu.institution}, ${edu.location} (${edu.period}). Estado: ${edu.status}. ${highlights}`,
-    category: "education",
+    category: "summary",
+    content: `Perfil objetivo: AI Engineer Jr. con enfoque en agentes IA, LLMs, RAG, automatización y aplicaciones reales.`,
   });
 
-  // Chunks de áreas de expertise
-  Object.entries(knowledgeBase.areas_expertise).forEach(
-    ([key, area]: [string, any]) => {
-      chunks.push({
-        content: `Área de expertise: ${area.title}. ${area.description} Habilidades: ${area.skills.join(", ")}.`,
-        category: `expertise_${key}`,
-      });
-    },
-  );
-
-  // Chunk de habilidades técnicas (ahora con la nueva estructura)
-  const skills = knowledgeBase.technical_skills;
-  const skillsText = Object.entries(skills)
-    .map(([key, value]: [string, any]) => {
-      return `${value.description}: ${value.skills.join(", ")}`;
-    })
-    .join(". ");
-  
   chunks.push({
-    content: `Habilidades Técnicas de ${knowledgeBase.personal.name}: ${skillsText}.`,
-    category: "technical_skills",
-  });
-
-  // Chunk de información de contacto
-  chunks.push({
-    content: `Información de contacto de ${knowledgeBase.personal.name}: Email: ${knowledgeBase.contact.email}, GitHub: ${knowledgeBase.contact.github}, Ubicación: ${knowledgeBase.contact.location}. Para contactar a Miguel, puedes escribirle a su correo electrónico o visitar su perfil de GitHub.`,
     category: "contact",
+    content: `Contacto de ${kb.personal.name}: email ${kb.contact.email}, GitHub ${kb.contact.github}, ubicación ${kb.contact.location}${kb.contact.phone ? `, teléfono ${kb.contact.phone}` : ""}.`,
   });
+
+  for (const edu of kb.education) {
+    chunks.push({
+      category: "education",
+      content: [
+        `Educación en ${edu.institution}`,
+        `Programa: ${edu.program}`,
+        edu.status ? `Estado: ${edu.status}` : null,
+        edu.period ? `Periodo: ${edu.period}` : null,
+        edu.highlights?.length ? `Puntos clave: ${edu.highlights.join("; ")}` : null,
+      ]
+        .filter(Boolean)
+        .join(". "),
+    });
+
+    // Crear chunk adicional para idiomas si es un curso de idiomas
+    if (edu.program.toLowerCase().includes("inglés") || edu.program.toLowerCase().includes("ingles") || edu.program.toLowerCase().includes("english")) {
+      chunks.push({
+        category: "education",
+        content: `${kb.personal.name} domina ${edu.program}. Capacitación completada en ${edu.institution} durante el período ${edu.period || "2018-2022"}. Comunicación fluida en inglés: conversación, lectura, escritura y comprensión auditiva.`,
+      });
+    }
+  }
+
+  for (const exp of kb.experience) {
+    chunks.push({
+      category: "experience",
+      content: [
+        `Experiencia en ${exp.company}`,
+        `Rol: ${exp.role}`,
+        `Periodo: ${exp.period}`,
+        `Resumen: ${exp.summary}`,
+        exp.highlights?.length ? `Logros: ${exp.highlights.join("; ")}` : null,
+      ]
+        .filter(Boolean)
+        .join(". "),
+    });
+  }
+
+  for (const [key, skills] of Object.entries(kb.skills)) {
+    chunks.push({
+      category: `skills_${key}`,
+      content: `Habilidades en ${key}: ${skills.join(", ")}.`,
+    });
+  }
+
+  chunks.push({
+    category: "professional_projects_overview",
+    content: `Proyectos profesionales: ${kb.professional_projects.map((p) => p.name).join(", ")}.`,
+  });
+  chunks.push({
+    category: "personal_projects_overview",
+    content: `Proyectos personales: ${kb.personal_projects.map((p) => p.name).join(", ")}.`,
+  });
+
+  for (const project of kb.professional_projects) {
+    chunks.push(toProjectChunk(project, "professional"));
+  }
+  for (const project of kb.personal_projects) {
+    chunks.push(toProjectChunk(project, "personal"));
+  }
 
   return chunks;
 }
 
-async function generateEmbeddings() {
-  console.log("🔄 Generando embeddings para la knowledge base...\n");
-
-  const chunks = createDocumentChunks();
-  console.log(`📊 Total de chunks a procesar: ${chunks.length}\n`);
-
-  const vectorDB: EmbeddedDocument[] = [];
-  let totalTokens = 0;
-
-  // Generar embeddings uno por uno con progress
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    process.stdout.write(
-      `⏳ [${i + 1}/${chunks.length}] Procesando: ${chunk.category}...`,
-    );
-
-    try {
-      const { embedding, usage } = await embed({
-        model: openai.embedding("text-embedding-3-small"),
-        value: chunk.content,
-      });
-
-      vectorDB.push({
-        content: chunk.content,
-        category: chunk.category,
-        embedding,
-      });
-
-      totalTokens += usage?.tokens || 0;
-      console.log(` ✅ (${usage?.tokens || 0} tokens)`);
-    } catch (error) {
-      console.log(` ❌ ERROR`);
-      console.error(`Error procesando chunk ${i}:`, error);
-      process.exit(1);
-    }
+async function main() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY no está configurada en el entorno.");
   }
 
-  // Guardar embeddings en archivo JSON
-  const outputPath = path.join(process.cwd(), "lib", "embeddings.json");
-  fs.writeFileSync(outputPath, JSON.stringify(vectorDB, null, 2));
+  const kb = await loadKnowledgeBase();
+  const chunks = buildChunks(kb);
 
-  // Calcular costo aproximado
-  const costPer1KTokens = 0.00002; // $0.00002 / 1K tokens para text-embedding-3-small
-  const totalCost = (totalTokens / 1000) * costPer1KTokens;
+  console.log(`Generando embeddings para ${chunks.length} chunks...`);
 
-  console.log("\n✅ ¡Embeddings generados exitosamente!");
-  console.log(`\n📊 Estadísticas:`);
-  console.log(`   - Total de documentos: ${vectorDB.length}`);
-  console.log(`   - Total de tokens: ${totalTokens}`);
-  console.log(
-    `   - Dimensiones por embedding: ${vectorDB[0].embedding.length}`,
-  );
-  console.log(`   - Costo aproximado: $${totalCost.toFixed(6)} USD`);
-  console.log(`   - Archivo guardado: ${outputPath}`);
-  console.log(
-    `\n💡 Este archivo se usará en producción (sin costos adicionales por usuario)`,
-  );
+  const { embeddings } = await embedMany({
+    model: openai.embedding("text-embedding-3-small"),
+    values: chunks.map((c) => c.content),
+  });
+
+  const output = chunks.map((chunk, i) => ({
+    ...chunk,
+    embedding: embeddings[i],
+  }));
+
+  const outPath = path.join(process.cwd(), "lib", "embeddings.json");
+  await writeFile(outPath, JSON.stringify(output, null, 2), "utf-8");
+  console.log(`Embeddings actualizados en ${outPath}`);
 }
 
-// Ejecutar
-generateEmbeddings().catch((error) => {
-  console.error("\n❌ Error fatal:", error);
+main().catch((error) => {
+  console.error("Error generando embeddings:", error);
   process.exit(1);
 });

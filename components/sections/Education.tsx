@@ -20,7 +20,7 @@ const education: EducationItem[] = [
     location: "Lima, Perú",
     highlights: [
       "Gestión, organización y participación en proyectos Mecatrónicos, participación en Expoferias tecnológicas y adquisición de conocimientos en Inteligencia Artificial, Agentes Conversacionales, Desarrollo de Software y Robótica.",
-      "Director del área de Automatización y Robótica del Centro Avanzado de Mecatrónica Inteligente (Periodo 2024-2025)",
+      "Director del área de Inteligencia Artificial y Robótica del Centro Avanzado de Mecatrónica Inteligente (Periodo 2024-2025)",
       "Cursos destacados: Inteligencia Artificial, Control de Procesos, Gestión de Proyectos",
     ],
   },
